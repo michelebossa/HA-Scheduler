@@ -3,7 +3,7 @@
   "version": "dev",
   "slug": "homeassistantscheduler",
   "description": "Home Assistant scheduler",
-  "url": "https://github.com/hassio-addons/addon-example",
+  "url": "https://github.com/michelebossa/HA-Scheduler",
   "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
   "startup": "application",
   "panel_icon": "mdi:calendar-clock",

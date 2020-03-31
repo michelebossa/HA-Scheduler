@@ -39,8 +39,8 @@ LABEL \
     org.label-schema.build-date=${BUILD_DATE} \
     org.label-schema.name="Example" \
     org.label-schema.schema-version="1.0" \
-    org.label-schema.url="https://addons.community" \
-    org.label-schema.usage="https://github.com/hassio-addons/addon-example/tree/master/README.md" \
+    org.label-schema.url="https://github.com/michelebossa/HA-Scheduler" \
+    org.label-schema.usage="https://github.com/michelebossa/HA-Scheduler/README.md" \
     org.label-schema.vcs-ref=${BUILD_REF} \
-    org.label-schema.vcs-url="https://github.com/hassio-addons/addon-example" \
+    org.label-schema.vcs-url="https://github.com/michelebossa/HA-Scheduler" \
     org.label-schema.vendor="Community Hass.io Addons"

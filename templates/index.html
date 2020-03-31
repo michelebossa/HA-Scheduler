@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col">
 
-            <button type="button" class="btn btn-light" onclick="Home())">Home</button>
+            <button type="button" class="btn btn-light" onclick="Home()">Home</button>
             <button type="button" class="btn btn-light" onclick="Reload()">Reload</button>
             <button type="button" class="btn btn-primary" onclick="Add()">Add</button>
         </div>
@@ -93,7 +93,7 @@
                 url: "reload",
                 data: JSON.stringify("{}"),
                 success: function(data) {
-                    location.reload();
+                   location.reload();
 
                 },
                 dataType: "json",

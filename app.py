@@ -10,6 +10,7 @@ scheduled = []
 elements = []
 SUPERVISOR_TOKEN = ""
 pid = 0
+element_global = {}
 def get_deamon_pid():
     global pid
     for process in psutil.process_iter():
@@ -83,22 +84,26 @@ def add():
         flash('Saved')
         #return redirect(request.url)
         return render_template('edit.html',elem=setting, elements=elements, pid = pid)
-@app.route('/delete/<id>', methods=["POST"])
-def delete(id):   
+@app.route('/item/delete/<id>', methods=["GET", "POST"])
+def delete(id):
+        global element_global   
         if id != "":
             filename = "/share/scheduler/" + id + ".json"
             os.remove(filename)
             run_daemon()
             load_scheduled()       
             flash('Deleted')
-        return render_template('edit.html',elem=setting, elements=elements, pid = pid)        
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid)        
 @app.route('/item/<id>', methods=["GET", "POST"])
 def edit(id):     
+    global element_global
     if request.method == "GET":
         elem = {}
         for el in scheduled:
           if el["id"] == id:
             elem = el
+        
+        element_global = elem       
         return render_template('edit.html',elem=elem, elements=elements, pid = pid)
     else: 
         #print(request)
@@ -133,6 +138,7 @@ def edit(id):
         run_daemon()
         load_scheduled()
         flash('Saved')
+        element_global = setting 
         return render_template('edit.html',elem=setting, elements=elements, pid = pid)
         
 @app.route('/reload',methods=['POST'])

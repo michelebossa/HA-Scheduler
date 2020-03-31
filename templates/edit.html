@@ -164,7 +164,7 @@
 						
                     </div>
                     <button type="submit" class="btn btn-primary">Save</button>
-					<button type="button" class="btn btn-primary" onclick="Delete({{elem.id}})">Delete</button>
+					<button type="button" class="btn btn-primary" onclick="Delete('{{elem.id}}')">Delete</button>
                 </form>
 
                 <div class="col">
@@ -179,18 +179,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script>
-	        function Delete(id) {
-			var url = "delete/" + id;
-            $.post({
-                url: url,
-                data: JSON.stringify("{}"),
-                success: function(data) {
-                    location.reload();
-
-                },
-                dataType: "json",
-                contentType: 'application/json'
-            })
+	    function Delete(id) {
+		    let new_path = "delete/" + id;
+            let url = window.location.href.replace(id, new_path);
+            window.location.href = url;
         }
         function get_url() {
             var url = window.location.href;
