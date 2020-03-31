@@ -1,0 +1,27 @@
+{
+  "name": "HA Scheduler",
+  "version": "dev",
+  "slug": "homeassistantscheduler",
+  "description": "Home Assistant scheduler",
+  "url": "https://github.com/hassio-addons/addon-example",
+  "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+  "startup": "application",
+  "panel_icon": "mdi:calendar-clock",
+  "panel_title": "HA Scheduler",
+  "panel_admin": false,
+  "boot": "auto",
+  "map": [
+    "share:rw",
+    "config:rw"
+  ], 
+  "hassio_api": true,
+  "homeassistant_api": true,
+  "ingress": true,
+  "options": {
+    "log_level": "info"
+  },
+  "schema": {
+    "log_level": "list(trace|debug|info|notice|warning|error|fatal)"
+  },
+  "webui": "http://[HOST]:[PORT:8099]"
+}

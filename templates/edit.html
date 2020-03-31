@@ -1,0 +1,207 @@
+<html>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+</head>
+
+<body>
+    <div class="row">
+        <div class="col">
+
+            <button type="button" class="btn btn-primary" onclick="Home()">Home</button>
+        </div>
+        <div class="col">
+            <div class="float-right">
+                <button type="button" class="btn btn-link">Process {{ pid }}</button>
+            </div>
+        </div>
+    </div>	
+	
+	
+    <div class="container w-75">
+	<div class="row">
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+
+			{% for message in messages %}
+			{% if "Error" not in message[1]: %}
+			<div class="alert alert-info">
+							<strong>{{ message[1] }}</strong> </div>
+			{% endif %}
+
+			{% if "Error" in message[1]: %}
+			<div class="alert alert-warning">
+							{{ message[1] }}</div>
+			{% endif %}
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+	</div>
+        <div class="row">
+            <div class="col">
+                <form action="#" method="POST" id="testForm" onsubmit="get_url()">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <select class="custom-select my-1 mr-sm-2" id="id" name="id">
+                                    {% if elem.id != "" %}
+                                    <option selected>{{elem.id}}-{{elem.friendly_name}}</option>
+                                    {% else %}
+                                    <option selected>Select Entity</option>
+                                    {% endif %} {% for element in elements %}
+                                    <option value="{{element.id}}-{{element.friendly_name}}">{{element.id}}-{{element.friendly_name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="input-group mb-3">                            
+                                <input type="checkbox" class="form-check-input" id="enable" name="enable" value="{{elem.enable}}" {{'checked="checked"' if elem.enable == "true" else ""}}>
+								<label class="form-check-label">Enable</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Monday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_1" value="{{elem.ON_1}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Tuesday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_2" value="{{elem.ON_2}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Wednesday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_3" value="{{elem.ON_3}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Thursday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_4" value="{{elem.ON_4}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Friday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_5" value="{{elem.ON_5}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Saturday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_6" value="{{elem.ON_6}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Sunday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_7" value="{{elem.ON_7}}">
+                            </div>
+                        </div>
+                        <div class="col">
+
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Monday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_1" value="{{elem.OFF_1}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Tuesday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_2" value="{{elem.OFF_2}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Wednesday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_3" value="{{elem.OFF_3}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Thursday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_4" value="{{elem.OFF_4}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Friday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_5" value="{{elem.OFF_5}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Saturday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_6" value="{{elem.OFF_6}}">
+                            </div>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Sunday</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_7" value="{{elem.OFF_7}}">
+                            </div>
+                        </div>
+						
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-primary" onclick="Delete({{elem.id}})">Delete</button>
+                </form>
+
+                <div class="col">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script>
+	        function Reload(id) {
+			var url = "delete/" + id;
+            $.post({
+                url: url,
+                data: JSON.stringify("{}"),
+                success: function(data) {
+                    location.reload();
+
+                },
+                dataType: "json",
+                contentType: 'application/json'
+            })
+        }
+        function get_url() {
+            var url = window.location.href;
+            document.getElementById('testForm').setAttribute('action', url);
+
+        }
+		function Home() {
+            window.history.back();
+
+        }
+    </script>
+</body>
+
+</html>
