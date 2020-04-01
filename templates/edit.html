@@ -50,9 +50,9 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <select class="custom-select my-1 mr-sm-2" id="id" name="id">
-                                    {% if elem.id != "" %}
-                                    <option selected>{{elem.id}}-{{elem.friendly_name}}</option>
+                                <select class="custom-select my-1 mr-sm-2" id="entity_id" name="entity_id">
+                                    {% if elem.entity_id != "" %}
+                                    <option selected>{{elem.entity_id}}-{{elem.friendly_name}}</option>
                                     {% else %}
                                     <option selected>Select Entity</option>
                                     {% endif %} {% for element in elements %}

@@ -12,6 +12,8 @@ next_rising = ""
 FOLDER = "/share/ha-scheduler/"
 
 def load_scheduled():
+    active = 0
+    disabled = 0
     list = os.listdir(FOLDER)
     for file in list:
        if ".json" in file:
@@ -19,7 +21,12 @@ def load_scheduled():
          with open(filename) as json_file:
            sche = json.load(json_file)
            if sche["enable"] == "true":
+              active += 1
               scheduled.append(sche)
+           else:
+              disabled += 1
+    mes = "Active " + str(active) + " Disabled " + str(disabled)
+    logging.info( mes )
 
 def get_sun():
     URL = "http://hassio/homeassistant/api/states/sun.sun"
@@ -140,6 +147,7 @@ def get_schedule_today( ):
            
            sched_today = {
              "id" : sche["id"],
+             "entity_id": sche["entity_id"],
              "domain" : sche["domain"],
              "ON" : time_sched_on,
              "OFF" : time_sched_off,
@@ -179,11 +187,11 @@ while ( 1 == 1 ):
    for sche in scheduled_today:
           time_sched = sche["ON"]
           if time_sched != "" and time_sched == current_time:
-            call_service(sche["domain"],sche["id"],'on')
+            call_service(sche["domain"],sche["entity_id"],'on')
                  
           time_sched = sche["OFF"]
           if time_sched != "" and time_sched == current_time:
-            call_service(sche["domain"],sche["id"],'off')
+            call_service(sche["domain"],sche["entity_id"],'off')
 
 
                   

@@ -3,7 +3,7 @@ import os
 import requests 
 import json
 import psutil
-
+import random, string
 
 app = Flask(__name__)
 scheduled = []
@@ -13,7 +13,10 @@ pid = 0
 element_global = {}
 sun = {}
 FOLDER = "/share/ha-scheduler/"
-
+def randomid(length):
+   letters = string.ascii_lowercase
+   return ''.join(random.choice(letters) for i in range(length))
+   
 def get_deamon_pid():
     global pid
     for process in psutil.process_iter():
@@ -41,6 +44,7 @@ def index():
 def add():     
     if request.method == "GET":
         elem     = {'id':'',
+                    'entity_id': '',
                     'friendly_name': '',
                     'domain': '',
                     'enable': 'true',
@@ -62,15 +66,17 @@ def add():
         return render_template('edit.html',elem=elem, elements=elements, pid = pid )
     else:
 #        print(request)
-        data = request.form["id"].split("-")
-        id = data[0]
+        data = request.form["entity_id"].split("-")
+        entity_id = data[0]
         friendly_name = data[1]
-        data = id.split(".")
+        data = entity_id.split(".")
         domain = data[0]
         enable = 'false'
+        id = randomid(20)
         if 'enable' in request.form:
           enable = 'true'
         setting   = {'id': id,
+                    'entity_id': entity_id,
                     'friendly_name': friendly_name,
                     'domain': domain,
                     'enable': enable,
@@ -118,15 +124,16 @@ def edit(id):
         return render_template('edit.html',elem=elem, elements=elements, pid = pid)
     else: 
         #print(request)
-        data = request.form["id"].split("-")
-        id = data[0]
+        data = request.form["entity_id"].split("-")
+        entity_id = data[0]
         friendly_name = data[1]
-        data = id.split(".")
+        data = entity_id.split(".")        
         domain = data[0]
         enable = 'false'
         if 'enable' in request.form:
           enable = 'true'
         setting   = {'id': id,
+                     'entity_id': entity_id,
                     'friendly_name': friendly_name,
                     'domain': domain,
                     'enable': enable,
