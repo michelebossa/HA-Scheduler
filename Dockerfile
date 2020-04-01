@@ -5,6 +5,7 @@ FROM ${BUILD_FROM}
 # Copy data for add-on
 COPY run.sh /home
 COPY app.py /home
+COPY daemon.py /home
 COPY templates /home/templates
 
 RUN chmod a+x /home/run.sh

@@ -11,20 +11,31 @@ elements = []
 SUPERVISOR_TOKEN = ""
 pid = 0
 element_global = {}
+sun = {}
+FOLDER = "/share/ha-scheduler/"
+
 def get_deamon_pid():
     global pid
     for process in psutil.process_iter():
-      if '/share/scheduler/daemon.py' in process.cmdline():
+      if '/home/daemon.py' in process.cmdline():
          pid = process.pid
 def write_scheduled(setting):
-   filename = "/share/scheduler/" + setting["id"] + ".json"
+   filename = FOLDER + setting["id"] + ".json"
    with open(filename, 'w') as outfile:
         json.dump(setting, outfile)
-        
+def get_sun():
+   global sun 
+   name = FOLDER + "sun.sun"
+   try:
+       with open(name) as json_file:
+            sun = json.load(json_file)
+   except IOError:
+       print("File Sun")
 @app.route('/')
 def index():
     get_deamon_pid()
-    return render_template('index.html', elements=elements, scheduled=scheduled, pid = pid )
+    get_sun()
+    return render_template('index.html', elements=elements, scheduled=scheduled, pid = pid, sun=sun )
 
 @app.route('/add', methods=["GET", "POST"])
 def add():     
@@ -88,7 +99,7 @@ def add():
 def delete(id):
         global element_global   
         if id != "":
-            filename = "/share/scheduler/" + id + ".json"
+            filename = FOLDER + id + ".json"
             os.remove(filename)
             run_daemon()
             load_scheduled()       
@@ -186,10 +197,10 @@ def get_elements():
 def load_scheduled():
     global scheduled
     scheduled = []
-    list = os.listdir('/share/scheduler/')
+    list = os.listdir(FOLDER)
     for file in list:
        if ".json" in file:
-         filename = "/share/scheduler/" + file
+         filename = FOLDER + file
          with open(filename) as json_file:
            data = json.load(json_file)
            scheduled.append(data)
@@ -210,11 +221,11 @@ def call_service(dominio,id,action):
 
 def run_daemon():
     for process in psutil.process_iter():
-      if '/share/scheduler/daemon.py' in process.cmdline():
+      if '/home/daemon.py' in process.cmdline():
          print("Daemon Kill" , process.pid)
          os.system("kill " + str(process.pid))      
 
-    os.system("python3 /share/scheduler/daemon.py &")
+    os.system("python3 /home/daemon.py &")
     print("Daemon Start")
 
 if __name__ == '__main__':
@@ -223,7 +234,8 @@ if __name__ == '__main__':
     run_daemon()
     #print(SUPERVISOR_TOKEN)
     load_scheduled()
-    get_elements()          
+    get_elements()      
+    get_sun()    
     app.secret_key = '7d441f27d441f27567d441f2b6176a'    
     app.run(debug=True, host='0.0.0.0', port=8099)
     

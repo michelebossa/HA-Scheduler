@@ -15,7 +15,7 @@
     <div class="row">
         <div class="col">
 
-            <button type="button" class="btn btn-primary" onclick="Home()">Home</button>
+            <button type="button" class="btn btn-primary" onclick="Home('{{elem.id}}')">Home</button>
         </div>
         <div class="col">
             <div class="float-right">
@@ -189,8 +189,17 @@
             document.getElementById('testForm').setAttribute('action', url);
 
         }
-		function Home() {
-            window.history.back();
+		function Home(id) {
+		    let new_path = "item/" + id;
+            let url = window.location.href.replace(new_path, "");
+			
+			new_path = "item/delete/" + id;
+            url = url.replace(new_path, "");
+			
+		    url = url.replace("add", "");
+            window.location.href = url;
+			
+           // window.history.back(); debugger;
 
         }
     </script>
