@@ -63,7 +63,7 @@ def add():
                     'OFF_6': '',
                     'OFF_7': ''            
                    }
-        return render_template('edit.html',elem=elem, elements=elements, pid = pid )
+        return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun )
     else:
 #        print(request)
         data = request.form["entity_id"].split("-")
@@ -100,7 +100,7 @@ def add():
         load_scheduled()       
         flash('Saved')
         #return redirect(request.url)
-        return render_template('edit.html',elem=setting, elements=elements, pid = pid)
+        return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun)
 @app.route('/item/delete/<id>', methods=["GET", "POST"])
 def delete(id):
         global element_global   
@@ -110,7 +110,7 @@ def delete(id):
             run_daemon()
             load_scheduled()       
             flash('Deleted')
-        return render_template('edit.html',elem=element_global, elements=elements, pid = pid)        
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)        
 @app.route('/item/<id>', methods=["GET", "POST"])
 def edit(id):     
     global element_global
@@ -121,7 +121,7 @@ def edit(id):
             elem = el
         
         element_global = elem       
-        return render_template('edit.html',elem=elem, elements=elements, pid = pid)
+        return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun)
     else: 
         #print(request)
         data = request.form["entity_id"].split("-")
@@ -157,7 +157,7 @@ def edit(id):
         load_scheduled()
         flash('Saved')
         element_global = setting 
-        return render_template('edit.html',elem=setting, elements=elements, pid = pid)
+        return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun)
         
 @app.route('/reload',methods=['POST'])
 def reload():

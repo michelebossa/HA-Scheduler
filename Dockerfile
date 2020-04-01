@@ -1,4 +1,5 @@
-ARG BUILD_FROM=hassioaddons/base:7.0.3
+#ARG BUILD_FROM=hassioaddons/base:7.0.3
+ARG BUILD_FROM
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
@@ -12,7 +13,7 @@ RUN chmod a+x /home/run.sh
 
 # Install requirements for add-on
 RUN apk add --no-cache python3 python3-dev py-psutil nano
-RUN pip3 install Flask requests 
+RUN pip3 install Flask requests
 
 # Python 3 HTTP Server serves the current working dir
 # So let's set it to our add-on persistent data directory.
