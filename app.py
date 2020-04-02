@@ -66,13 +66,20 @@ def add():
         return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun )
     else:
 #        print(request)
-        data = request.form["entity_id"].split("-")
-        entity_id = data[0]
-        friendly_name = data[1]
-        data = entity_id.split(".")
-        domain = data[0]
-        enable = 'false'
-        id = randomid(20)
+        if request.form["entity_id"] == "" or request.form["entity_id"] ==  "Select Entity":
+            id = request.form["entity_id"]
+            entity_id = ""
+            friendly_name = ""
+            domain = ""
+        else:
+            data = request.form["entity_id"].split("-")
+            entity_id = data[0]
+            friendly_name = data[1]
+            data = entity_id.split(".")
+            domain = data[0]
+            id = randomid(20)
+        
+        enable = 'false'        
         if 'enable' in request.form:
           enable = 'true'
         setting   = {'id': id,
@@ -95,10 +102,13 @@ def add():
                     'OFF_6': request.form["OFF_6"],
                     'OFF_7': request.form["OFF_7"],           
                    }    
-        write_scheduled(setting)   
-        run_daemon()
-        load_scheduled()       
-        flash('Saved')
+        if id == "" or id ==  "Select Entity":
+            flash('Error please fill entity id')
+        else:
+            write_scheduled(setting)   
+            run_daemon()
+            load_scheduled()       
+            flash('Saved')
         #return redirect(request.url)
         return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun)
 @app.route('/item/delete/<id>', methods=["GET", "POST"])
@@ -166,6 +176,16 @@ def reload():
     get_elements()  
     return json.dumps({'html':'<span>All good !!</span>'})
  
+@app.route('/log',methods=['GET'])
+def log():
+   name = FOLDER + "logfile"
+   data = ""
+   try:
+       with open(name) as file:
+            data = file.read()
+   except IOError:
+       print("Missing Log")
+   return render_template('log.html',data=data, pid = pid, sun=sun)
     
 def get_elements():
     global elements    

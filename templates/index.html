@@ -19,7 +19,7 @@
 
             <button type="button" class="btn btn-light" onclick="Home()"><span class="mdi mdi-home"></span></button>
             <button type="button" class="btn btn-light" onclick="Reload()"><span class="mdi mdi-reload"></span></button>
-            <!-- <button type="button" class="btn btn-primary" onclick="Add()">Add</button> -->
+            <button type="button" class="btn btn-light" onclick="Log()"><span class="mdi mdi-math-log"></span></button>
         </div>
         <div class="col">
             <div class="float-right">
@@ -91,7 +91,7 @@
     </div>
     {% endfor %}
 	<div>
-	<button type="button" onclick="Add()" class="btn btn-danger btn-circle" style="position: fixed;top: 10%;right: 10%;border-radius: 50%;"><span class="mdi mdi-plus"></span></button>
+	<button type="button" onclick="Add()" class="btn btn-danger btn-circle" style="position: fixed;top: 10%;right: 10%;border-radius: 100%;"><span class="mdi mdi-plus"></span></button>
     </div>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -121,7 +121,11 @@
             window.location.href = url;
 
         }
+        function Log() {
+            let url = window.location.href + "log";
+            window.location.href = url;
 
+        }
         function Edit(id) {
             let url = window.location.href + "item/" + id;
             window.location.href = url;

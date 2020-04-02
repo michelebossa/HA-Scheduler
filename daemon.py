@@ -4,6 +4,7 @@ import time
 import json
 import os
 import logging
+import threading
 
 scheduled = []
 scheduled_today = []
@@ -68,9 +69,9 @@ def call_service(dominio,id,action):
           
     # sending get request and saving the response as response object 
     response = requests.post(url = URL, headers=headers,json=data)      
-    mes = str(id) + " Turn " + str(action)
+    mes = str(id) + " Turn " + str(action) + " " + str(response.status_code) 
     logging.info( mes )
-
+    time.sleep(0.5)
 
 def get_schedule_today( ):
     global scheduled_today 
@@ -174,6 +175,49 @@ SUPERVISOR_TOKEN = os.environ['SUPERVISOR_TOKEN']
 get_sun()
 
 get_schedule_today()
+
+threadLock = threading.Lock()
+class call_HA (threading.Thread):
+   def __init__(self, dominio, id, azione):
+      threading.Thread.__init__(self)
+      self.dominio = dominio
+      self.id = id
+      self.azione = azione
+   def run(self):
+      # Acquisizione del lock
+      threadLock.acquire()
+      call_service(self.dominio,self.id,self.azione)
+      # Rilascio del lock
+      threadLock.release()
+      
+
+class check_HA (threading.Thread):
+   def __init__(self, elements):
+      threading.Thread.__init__(self)
+      self.elements = elements
+   def run(self):
+      # Acquisizione del lock
+      threadLock.acquire()
+      time.sleep(1)
+      URL = "http://hassio/homeassistant/api/states"
+                   
+      # defining a params dict for the parameters to be sent to the API 
+      Auth = 'Bearer ' + SUPERVISOR_TOKEN
+      # print(Auth)
+      headers = {'content-type': 'application/json', 'Authorization' : Auth } 
+              
+      # sending get request and saving the response as response object 
+      response = requests.get(url = URL, headers=headers) 
+      json_data = response.json()   
+       
+      for obj in json_data:        
+          for elem in self.elements:
+              if obj["entity_id"] ==  elem["id"]:
+                if obj["state"] != elem["state"]:
+                   call_service(elem["domain"],elem["id"],elem["state"])
+      # Rilascio del lock
+      threadLock.release()
+elements_check = []         
 while ( 1 == 1 ): 
    now = datetime.now()
    
@@ -181,19 +225,38 @@ while ( 1 == 1 ):
    
    # Reload  new day
    if current_time == "00:00:01":
-      get_sun()
-      get_schedule_today()
-      
+       get_sun()
+       get_schedule_today()
+
    for sche in scheduled_today:
           time_sched = sche["ON"]
           if time_sched != "" and time_sched == current_time:
-            call_service(sche["domain"],sche["entity_id"],'on')
+            # call_service(sche["domain"],sche["entity_id"],'on')
+            thread1 = call_HA(sche["domain"],sche["entity_id"],'on')
+            thread1.start()
+            element = {
+              'id' : sche["entity_id"],
+              'state' : "on",
+              'domain' : sche["domain"]
+              }
+            elements_check.append(element) 
                  
           time_sched = sche["OFF"]
           if time_sched != "" and time_sched == current_time:
-            call_service(sche["domain"],sche["entity_id"],'off')
-
-
-                  
+            # call_service(sche["domain"],sche["entity_id"],'off')
+            thread1 = call_HA(sche["domain"],sche["entity_id"],'off')
+            thread1.start()
+            element = {
+              'id' : sche["entity_id"],
+              'state' : "off",
+              'domain' : sche["domain"]
+              }
+            elements_check.append(element) 
+   if not elements_check:
+      elements_check = []  
+   else:   
+      thread1 = check_HA(elements_check)
+      thread1.start()     
+      elements_check = []
    #print("Current Time =", current_time, )
    time.sleep(1)
