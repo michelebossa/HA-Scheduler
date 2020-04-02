@@ -2,7 +2,7 @@
 
 ## 0.2
 
-- FIX Submit embty ID
+- FIX Submit empty ID
 - Add Log button
 
 ## 0.1
