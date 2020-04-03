@@ -47,20 +47,29 @@ def get_sun():
     next_setting = next_setting.replace(tzinfo=timezone.utc).astimezone(tz=None)    
     next_rising = datetime.strptime(json_data["next_rising"], '%Y-%m-%dT%H:%M:%S%z')      
     next_rising = next_rising.replace(tzinfo=timezone.utc).astimezone(tz=None)
-    now = datetime.now()
-    day_sun = now.isoweekday()
-    filename = FOLDER + "sun.sun"
-    sun = { 
-            "weekday"     : day_sun,
-            "sunrise" : next_rising.strftime("%H:%M:%S"),
-            "sunset" : next_setting.strftime("%H:%M:%S")
-    }
-    with open(filename, 'w') as outfile:
-         json.dump(sun, outfile)
-        
-    #print("Sunset", next_setting.strftime("%H:%M:%S") , "Sunrise", next_rising.strftime("%H:%M:%S") )
-    mes = "Sunset " + next_setting.strftime("%H:%M:%S") + " Sunrise " + next_rising.strftime("%H:%M:%S")
-    logging.info( mes )
+    found = "false"
+    if day_sun == "":
+      day_sun = datetime.now().strftime("%d")
+      found = "true"
+    elif next_rising.strftime("%d") == next_setting.strftime("%d") and next_rising.strftime("%d") == datetime.now().strftime("%H:%M:%S"):  
+      day_sun = datetime.now().strftime("%d")
+      found = "true"
+    # else:
+      # day_sun == ""
+            
+    if found == "true":
+       filename = FOLDER + "sun.sun"
+       sun = { 
+             "day"     : day_sun,
+             "sunrise" : next_rising.strftime("%H:%M:%S"),
+             "sunset" : next_setting.strftime("%H:%M:%S")
+        }
+       with open(filename, 'w') as outfile:
+            json.dump(sun, outfile)
+            
+        #print("Sunset", next_setting.strftime("%H:%M:%S") , "Sunrise", next_rising.strftime("%H:%M:%S") )
+       mes = "Sunrise " + next_rising.strftime("%H:%M:%S") + " Sunset " + next_setting.strftime("%H:%M:%S") 
+       logging.info( mes )
     
 def call_service(dominio,id,action):
     URL = "http://hassio/homeassistant/api/services/" + dominio + "/turn_" + action
@@ -238,11 +247,12 @@ while ( 1 == 1 ):
    now = datetime.now()
    
    current_time = now.strftime("%H:%M:%S")
-   
+   day = now.strftime("%d")
    # Reload  new day
-   if day_sun != now.isoweekday(): #current_time == "00:00:01":
+   if day_sun != day: #current_time == "00:00:01":
        get_sun()
-       get_schedule_today()
+       if day_sun == day:
+          get_schedule_today()
 
    for sche in scheduled_today:
           time_sched = sche["ON"]

@@ -1,6 +1,4 @@
-#ARG BUILD_FROM=hassioaddons/base:7.0.3
-ARG BUILD_FROM
-# hadolint ignore=DL3006
+ARG BUILD_FROM	
 FROM ${BUILD_FROM}
 
 # Copy data for add-on

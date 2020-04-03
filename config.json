@@ -1,6 +1,6 @@
 {
   "name": "HA Scheduler",
-  "version": "0.2",
+  "version": "0.3",
   "slug": "homeassistantscheduler",
   "description": "Home Assistant scheduler",
   "url": "https://github.com/michelebossa/HA-Scheduler",
