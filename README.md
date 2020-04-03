@@ -4,7 +4,7 @@ Scheduler Addon Home Hassistant
 This addon give us the possibility to handle a simple week configuration of automation, light,binary_sensor, switch and script.
 
 
-![main](https://raw.githubusercontent.com/HA-Scheduler/master/main.png)
+![main](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/main.png)
 
 
 Entity setting section:
@@ -17,7 +17,7 @@ Time format 							HH:MM:SS
 Action at sunrise/ sunset 				sunrise/sunset
 Offset + or - at sunrise or sunset      sunrise+30M   (M = Minutes, S = Second)
 
-![edit](https://raw.githubusercontent.com/HA-Scheduler/master/edit.png)
+![edit](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/edit.png)
 
 
 # Installation
