@@ -10,6 +10,7 @@ scheduled = []
 scheduled_today = []
 next_setting = ""
 next_rising = ""
+day_sun = ""
 FOLDER = "/share/ha-scheduler/"
 
 def load_scheduled():
@@ -41,13 +42,16 @@ def get_sun():
     json_data = response.json()["attributes"]
     global next_setting
     global next_rising
+    global day_sun
     next_setting = datetime.strptime(json_data["next_setting"], '%Y-%m-%dT%H:%M:%S%z')     
     next_setting = next_setting.replace(tzinfo=timezone.utc).astimezone(tz=None)    
     next_rising = datetime.strptime(json_data["next_rising"], '%Y-%m-%dT%H:%M:%S%z')      
     next_rising = next_rising.replace(tzinfo=timezone.utc).astimezone(tz=None)
-
+    now = datetime.now()
+    day_sun = now.isoweekday()
     filename = FOLDER + "sun.sun"
     sun = { 
+            "weekday"     : day_sun,
             "sunrise" : next_rising.strftime("%H:%M:%S"),
             "sunset" : next_setting.strftime("%H:%M:%S")
     }
@@ -73,6 +77,16 @@ def call_service(dominio,id,action):
     logging.info( mes )
     time.sleep(0.5)
 
+def get_second(input):
+   if "S" in input:
+     return  int(input.split("S")[0])
+   elif "M" in input:
+     seconds = input.split("M")[0] 
+     seconds = int(seconds)*60
+     return int(seconds)
+   else: 
+     return int(input)
+     
 def get_schedule_today( ):
     global scheduled_today 
     scheduled_today = []
@@ -90,12 +104,12 @@ def get_schedule_today( ):
              if "+" in time_sched_on or "-" in time_sched_on:
                if "+" in time_sched_on:
                  tmp = time_sched_on.split("+")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_rising + timedelta(seconds=second)
                  time_sched_on = data.strftime("%H:%M:%S")
                else:
                  tmp = time_sched_on.split("-")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_rising - timedelta(seconds=second)                 
                  time_sched_on = data.strftime("%H:%M:%S")
              else:
@@ -105,12 +119,12 @@ def get_schedule_today( ):
              if "+" in time_sched_on or "-" in time_sched_on:
                if "+" in time_sched_on:
                  tmp = time_sched_on.split("+")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_setting + timedelta(seconds=second)
                  time_sched_on = data.strftime("%H:%M:%S")
                else:
                  tmp = time_sched_on.split("-")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_setting - timedelta(seconds=second)
                  time_sched_on = data.strftime("%H:%M:%S")
              else:
@@ -120,12 +134,12 @@ def get_schedule_today( ):
              if "+" in time_sched_off or "-" in time_sched_off:
                if "+" in time_sched_off:
                  tmp = time_sched_off.split("+")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_rising + timedelta(seconds=second)
                  time_sched_off = data.strftime("%H:%M:%S")
                else:
                  tmp = time_sched_off.split("-")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_rising - timedelta(seconds=second)
                  time_sched_off = data.strftime("%H:%M:%S")
              else:
@@ -135,12 +149,12 @@ def get_schedule_today( ):
              if "+" in time_sched_off or "-" in time_sched_off:
                if "+" in time_sched_off:
                  tmp = time_sched_off.split("+")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_setting + timedelta(seconds=second)
                  time_sched_off = data.strftime("%H:%M:%S")
                else:
                  tmp = time_sched_off.split("-")
-                 second = int(tmp[1]) 
+                 second = get_second(tmp[1]) 
                  data = next_setting - timedelta(seconds=second)
                  time_sched_off = data.strftime("%H:%M:%S")
              else:
@@ -154,7 +168,9 @@ def get_schedule_today( ):
              "OFF" : time_sched_off,
            }
            scheduled_today.append(sched_today)
-#    print(scheduled_today)
+    for sched in scheduled_today:
+       mes = sched["entity_id"] + " ON "+ sched["ON"]  + " OFF "+ sched["OFF"]
+       logging.info( mes )
     
 level_var = logging.NOTSET
 with open("/data/options.json") as json_file:
@@ -224,7 +240,7 @@ while ( 1 == 1 ):
    current_time = now.strftime("%H:%M:%S")
    
    # Reload  new day
-   if current_time == "00:00:01":
+   if day_sun != now.isoweekday(): #current_time == "00:00:01":
        get_sun()
        get_schedule_today()
 

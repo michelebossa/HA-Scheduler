@@ -3,7 +3,8 @@
 ## 0.3
 
 - FIX Sun reload
-
+- Handle Minutes and Second to SUN offset
+- More info LOG
 
 ## 0.2
 
