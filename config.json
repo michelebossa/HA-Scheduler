@@ -18,10 +18,14 @@
   "homeassistant_api": true,
   "ingress": true,
   "options": {
-    "log_level": "info"
+    "log_level": "info",
+	"max_retries": 2,
+	"max_retry_interval": 5 
   },
   "schema": {
-    "log_level": "list(trace|debug|info|notice|warning|error|fatal)"
+    "log_level": "list(trace|debug|info|notice|warning|error|fatal)",
+	"max_retries": "int(1,10)",
+	"max_retry_interval": "int(1,120)"
   },
   "webui": "http://[HOST]:[PORT:8099]"
 }

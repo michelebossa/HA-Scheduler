@@ -12,7 +12,9 @@ next_setting = ""
 next_rising = ""
 day_sun = ""
 FOLDER = "/share/ha-scheduler/"
-
+config = {}
+max_retries = 2
+max_retry_interval = 5 
 def load_scheduled():
     active = 0
     disabled = 0
@@ -186,12 +188,17 @@ with open("/data/options.json") as json_file:
      config = json.load(json_file)
      if config["log_level"] == "info":
            level_var = logging.INFO
+     if "max_retries" in config:
+        max_retries = config["max_retries"]
+     if "max_retry_interval" in config:
+        max_retries = config["max_retry_interval"]  
+        
 name = FOLDER + "logfile"
 logging.basicConfig(level=level_var, filename=name, filemode="w+",
                         format="%(asctime)-15s %(levelname)-8s %(message)s")
 mes = "Start Daemon PID: " + str(os.getpid())
 logging.info( mes )
-    
+   
 load_scheduled()
 
 SUPERVISOR_TOKEN = os.environ['SUPERVISOR_TOKEN']
@@ -223,7 +230,7 @@ class check_HA (threading.Thread):
    def run(self):
       # Acquisizione del lock
       threadLock.acquire()
-      time.sleep(1)
+      time.sleep(max_retry_interval)
       URL = "http://hassio/homeassistant/api/states"
                    
       # defining a params dict for the parameters to be sent to the API 
@@ -281,8 +288,11 @@ while ( 1 == 1 ):
    if not elements_check:
       elements_check = []  
    else:   
-      thread1 = check_HA(elements_check)
-      thread1.start()     
+      times = max_retries
+      while times > 0:
+        thread1 = check_HA(elements_check)
+        thread1.start()                
+        times -= 1  
       elements_check = []
    #print("Current Time =", current_time, )
    time.sleep(1)
