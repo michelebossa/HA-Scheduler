@@ -53,7 +53,7 @@ def get_sun():
     if day_sun == "":
       day_sun = datetime.now().strftime("%d")
       found = "true"
-    elif next_rising.strftime("%d") == next_setting.strftime("%d") and next_rising.strftime("%d") == datetime.now().strftime("%H:%M:%S"):  
+    elif next_rising.strftime("%d") == next_setting.strftime("%d") and next_rising.strftime("%d") == datetime.now().strftime("%d"):  
       day_sun = datetime.now().strftime("%d")
       found = "true"
     # else:
