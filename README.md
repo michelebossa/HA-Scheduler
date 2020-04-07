@@ -12,10 +12,10 @@ Entity setting section:
 We can set on or off action every day with follow format:
 
 
-No action on this day					No Fill	
-Time format 							HH:MM:SS
-Action at sunrise/ sunset 				sunrise/sunset
-Offset + or - at sunrise or sunset      sunrise+30M   (M = Minutes, S = Second)
+- No Fill									( No action on this day	)					
+- HH:MM:SS									( Time format ) 							
+- sunrise/sunset							( Action at sunrise/ sunset 				sunrise/sunset )
+-sunrise+30M   (M = Minutes, S = Second)	( Offset + or - at sunrise or sunset )     
 
 ![edit](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/edit.png)
 
@@ -31,4 +31,4 @@ Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New reposi
 	max_retry_interval: How many seconds to wait before retrying. default 5
 	
 	
-	
+<a target="_blank" href="https://www.buymeacoffee.com/michelebossa">Buy me a beer 🍺</a>
