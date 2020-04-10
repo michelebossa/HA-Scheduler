@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4
+
+- Daemon rewritted
+- Retry option
+
 ## 0.3
 
 - FIX Sun reload

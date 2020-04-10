@@ -186,7 +186,8 @@ def check_HA(**elem):
 
   times = max_retries
   while times > 0:    
-        
+      mes = "Start Check HA" + elem["id"]  + " RET INDEX" + str(times)
+      logging.info( mes )
       time.sleep(max_retry_interval)
       URL = "http://hassio/homeassistant/api/states/" + elem["id"] 
                        
@@ -199,14 +200,18 @@ def check_HA(**elem):
       response = requests.get(url = URL, headers=headers) 
       json_data = response.json()   
       #print(json_data["state"])     
-      if json_data["state"] != elem["action"]:
+      mes = "ID" + elem["id"]  + " RET "+ json_data["state"] + " " + str(json_data)
+      logging.info( mes )
+      if json_data["state"].lower() != elem["action"].lower():
         call_service(id=elem["id"],dominio=elem["dominio"],action=elem["action"])
-      times -= 1   
+        times -= 1
+      else:
+        times = 0
 
 def kill_daemon():
     for process in psutil.process_iter():
       if '/home/daemon.py' in process.cmdline():
-         print("Daemon Kill" , process.pid)
+         # print("Daemon Kill" , process.pid)
          mes = "Daemon Kill: " + str(process.pid)
          logging.info( mes )
          os.system("kill " + str(process.pid))         
@@ -269,7 +274,7 @@ for sche in scheduled_today:
     if t > now_t:
         param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "on"}
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )  
-        scheduler.enterabs(t, 2 ,check_HA, argument=(), kwargs=param )
+        scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
     
   time_sched = sche["OFF"]
   if time_sched != "":
@@ -282,7 +287,7 @@ for sche in scheduled_today:
     if t > now_t:    
         param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "OFF"}
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )   
-        scheduler.enterabs(t, 2 ,check_HA, argument=(), kwargs=param )
+        scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
     
   mes = sche["entity_id"] + " ON "+ sche["ON"]  + " OFF "+ sche["OFF"]
   logging.info( mes )
@@ -293,7 +298,10 @@ t = time.strptime(date, '%Y-%m-%d %H:%M:%S')
 t = time.mktime(t)
 param = {}
 scheduler.enterabs(t, 1 ,restart, argument=(), kwargs=param )  
-    
+
+for sc in scheduler.queue:
+     print(sc)
+     logging.info( sc )
 scheduler.run()
 logging.info( "End this day" )
 # call_service(id="switch.lume_relay",dominio="switch",action="off")

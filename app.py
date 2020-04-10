@@ -264,5 +264,5 @@ if __name__ == '__main__':
     get_elements()      
     get_sun()    
     app.secret_key = '7d441f27d441f27567d441f2b6176a'    
-    app.run(debug=True, host='0.0.0.0', port=8099)
+    app.run(debug=False, host='0.0.0.0', port=8099)
     

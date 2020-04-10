@@ -31,4 +31,4 @@ Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New reposi
 	max_retry_interval: How many seconds to wait before retrying. default 5
 	
 	
-<a target="_blank" href="https://www.buymeacoffee.com/michelebossa">Buy me a beer 🍺</a>
+<a target="_blank" href="https://www.buymeacoffee.com/michelebossa" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
