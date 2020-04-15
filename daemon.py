@@ -21,14 +21,25 @@ def load_scheduled():
     active = 0
     disabled = 0
     list = os.listdir(FOLDER)
+    now = datetime.now()
+    day = now.isoweekday()
+    
     for file in list:
        if ".json" in file:
          filename = FOLDER + file
          with open(filename) as json_file:
            sche = json.load(json_file)
            if sche["enable"] == "true":
-              active += 1
-              scheduled.append(sche)
+                name = "enable_" + str(day)
+                if name in sche:            
+                   if sche[name]  == "true":             
+                      active += 1
+                      scheduled.append(sche)
+                   else:
+                      disabled += 1 
+                else:
+                   active += 1
+                   scheduled.append(sche) 
            else:
               disabled += 1
     mes = "Active " + str(active) + " Disabled " + str(disabled)
@@ -300,7 +311,7 @@ param = {}
 scheduler.enterabs(t, 1 ,restart, argument=(), kwargs=param )  
 
 for sc in scheduler.queue:
-     print(sc)
+     # print(sc)
      logging.info( sc )
 scheduler.run()
 logging.info( "End this day" )

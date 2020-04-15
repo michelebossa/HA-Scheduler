@@ -48,6 +48,13 @@ def add():
                     'friendly_name': '',
                     'domain': '',
                     'enable': 'true',
+                    'enable_1': 'true',
+                    'enable_2': 'true',
+                    'enable_3': 'true',
+                    'enable_4': 'true',
+                    'enable_5': 'true',
+                    'enable_6': 'true',
+                    'enable_7': 'true',
                     'ON_1': '',
                     'ON_2': '',
                     'ON_3': '',
@@ -79,14 +86,43 @@ def add():
             domain = data[0]
             id = randomid(20)
         
-        enable = 'false'        
+        enable = 'false'  
+        enable_1 = 'false' 
+        enable_2 = 'false'
+        enable_3 = 'false'
+        enable_4 = 'false'
+        enable_5 = 'false'
+        enable_6 = 'false'
+        enable_7 = 'false'
         if 'enable' in request.form:
           enable = 'true'
+        if 'enable_1' in request.form:
+          enable_1 = 'true'   
+        if 'enable_2' in request.form:
+          enable_2 = 'true' 
+        if 'enable_3' in request.form:
+          enable_3 = 'true' 
+        if 'enable_4' in request.form:
+          enable_4 = 'true' 
+        if 'enable_5' in request.form:
+          enable_5 = 'true' 
+        if 'enable_6' in request.form:
+          enable_6 = 'true' 
+        if 'enable_7' in request.form:
+          enable_7 = 'true'   
+          
         setting   = {'id': id,
                     'entity_id': entity_id,
                     'friendly_name': friendly_name,
                     'domain': domain,
                     'enable': enable,
+                    'enable_1': enable_1,
+                    'enable_2': enable_2,
+                    'enable_3': enable_3,
+                    'enable_4': enable_4,
+                    'enable_5': enable_5,
+                    'enable_6': enable_6,
+                    'enable_7': enable_7,                    
                     'ON_1': request.form["ON_1"],
                     'ON_2': request.form["ON_2"],
                     'ON_3': request.form["ON_3"],
@@ -140,13 +176,41 @@ def edit(id):
         data = entity_id.split(".")        
         domain = data[0]
         enable = 'false'
+        enable_1 = 'false' 
+        enable_2 = 'false'
+        enable_3 = 'false'
+        enable_4 = 'false'
+        enable_5 = 'false'
+        enable_6 = 'false'
+        enable_7 = 'false'        
         if 'enable' in request.form:
           enable = 'true'
+        if 'enable_1' in request.form:
+          enable_1 = 'true'   
+        if 'enable_2' in request.form:
+          enable_2 = 'true' 
+        if 'enable_3' in request.form:
+          enable_3 = 'true' 
+        if 'enable_4' in request.form:
+          enable_4 = 'true' 
+        if 'enable_5' in request.form:
+          enable_5 = 'true' 
+        if 'enable_6' in request.form:
+          enable_6 = 'true' 
+        if 'enable_7' in request.form:
+          enable_7 = 'true'           
         setting   = {'id': id,
                      'entity_id': entity_id,
                     'friendly_name': friendly_name,
                     'domain': domain,
                     'enable': enable,
+                    'enable_1': enable_1,
+                    'enable_2': enable_2,
+                    'enable_3': enable_3,
+                    'enable_4': enable_4,
+                    'enable_5': enable_5,
+                    'enable_6': enable_6,
+                    'enable_7': enable_7,                       
                     'ON_1': request.form["ON_1"],
                     'ON_2': request.form["ON_2"],
                     'ON_3': request.form["ON_3"],
@@ -230,6 +294,20 @@ def load_scheduled():
          filename = FOLDER + file
          with open(filename) as json_file:
            data = json.load(json_file)
+           if not 'enable_1' in data:
+              data['enable_1'] = 'true'
+           if not 'enable_2' in data:
+              data['enable_2'] = 'true'  
+           if not 'enable_3' in data:
+              data['enable_3'] = 'true'  
+           if not 'enable_4' in data:
+              data['enable_4'] = 'true'   
+           if not 'enable_5' in data:
+              data['enable_5'] = 'true' 
+           if not 'enable_6' in data:
+              data['enable_6'] = 'true' 
+           if not 'enable_7' in data:
+              data['enable_7'] = 'true'               
            scheduled.append(data)
            
     scheduled = sorted(scheduled,key=lambda x:x['id'],reverse=False)     

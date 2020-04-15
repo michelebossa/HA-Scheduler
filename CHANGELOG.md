@@ -1,4 +1,7 @@
 # Changelog
+## 0.5
+
+- Add the possibility to turn individual days on or off (Request 1)
 
 ## 0.4
 
