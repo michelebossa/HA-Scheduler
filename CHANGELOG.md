@@ -1,4 +1,9 @@
 # Changelog
+
+## 0.6
+
+- Add Climate entity
+
 ## 0.5
 
 - Add the possibility to turn individual days on or off (Request 1)
