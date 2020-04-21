@@ -1,7 +1,7 @@
 # HA-Scheduler
 Scheduler Addon Home Hassistant
 
-This addon give us the possibility to handle a simple week configuration of automation, light, binary_sensor, climate ,switch and script.
+This addon give us the possibility to handle a simple week configuration of automation, light, binary_sensor, climate, cover, switch and script.
 
 
 ![main](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/main.png)

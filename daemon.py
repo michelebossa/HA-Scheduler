@@ -87,7 +87,17 @@ def get_sun():
        logging.info( mes )
     
 def call_service(**elem):
-    URL = "http://hassio/homeassistant/api/services/" + elem["dominio"] + "/turn_" + elem["action"]
+    service = ""
+    if elem["dominio"] == "cover":
+        if elem["action"].lower() == "on":
+           service = "/open_cover"
+        else:
+           service = "/close_cover"
+    else:
+        service = "/turn_" + elem["action"]
+    
+    URL = "http://hassio/homeassistant/api/services/" + elem["dominio"] + service
+    # URL = "http://hassio/homeassistant/api/services/" + elem["dominio"] + "/turn_" + elem["action"]
                
     # defining a params dict for the parameters to be sent to the API 
     Auth = 'Bearer ' + SUPERVISOR_TOKEN
@@ -284,8 +294,9 @@ for sche in scheduled_today:
     now_t = time.mktime(now_t)
     if t > now_t:
         param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "on"}
-        scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )  
-        scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
+        scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
+        if sche["domain"] != "cover":
+            scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
     
   time_sched = sche["OFF"]
   if time_sched != "":
@@ -297,8 +308,9 @@ for sche in scheduled_today:
     now_t = time.mktime(now_t)
     if t > now_t:    
         param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "OFF"}
-        scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )   
-        scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
+        scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
+        if sche["domain"] != "cover":
+            scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
     
   mes = sche["entity_id"] + " ON "+ sche["ON"]  + " OFF "+ sche["OFF"]
   logging.info( mes )

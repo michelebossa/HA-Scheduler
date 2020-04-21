@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7
+
+- Add Cover entity
+
 ## 0.6
 
 - Add Climate entity
