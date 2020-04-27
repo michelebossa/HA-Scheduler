@@ -2,6 +2,10 @@
 
 ## 0.7
 
+- Add hassio.addon_stdin function to enable or disable the schedule
+
+## 0.7
+
 - Add Cover entity
 
 ## 0.6

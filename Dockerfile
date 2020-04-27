@@ -5,6 +5,7 @@ FROM ${BUILD_FROM}
 COPY run.sh /home
 COPY app.py /home
 COPY daemon.py /home
+COPY daemon_input.py /home
 COPY templates /home/templates
 
 RUN chmod a+x /home/run.sh
