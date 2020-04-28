@@ -41,12 +41,19 @@ def index():
     return render_template('index.html', elements=elements, scheduled=scheduled, pid = pid, sun=sun )
 
 @app.route('/add', methods=["GET", "POST"])
-def add():     
-    if request.method == "GET":
+def add():   
+    global element_global   
+    if request.method == "GET":    
+        entity_id = []
+        entity = {
+                'entity_id' : '',
+                'domain' : '',
+                'friendly_name' : ''
+                }
+        entity_id.append(entity)
         elem     = {'id':'',
-                    'entity_id': '',
+                    'entity_id': entity_id,
                     'friendly_name': '',
-                    'domain': '',
                     'enable': 'true',
                     'enable_1': 'true',
                     'enable_2': 'true',
@@ -70,22 +77,45 @@ def add():
                     'OFF_6': '',
                     'OFF_7': ''            
                    }
+        element_global = elem           
         return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun )
     else:
 #        print(request)
-        if request.form["entity_id"] == "" or request.form["entity_id"] ==  "Select Entity":
-            id = request.form["entity_id"]
-            entity_id = ""
-            friendly_name = ""
-            domain = ""
-        else:
-            data = request.form["entity_id"].split("-")
-            entity_id = data[0]
-            friendly_name = data[1]
-            data = entity_id.split(".")
-            domain = data[0]
-            id = randomid(20)
-        
+        entity_id = []
+        i = 0
+        while True:
+            i += 1
+            name = "entity_id_" + str(i)            
+            if name in request.form:                
+                if request.form[name] != "Select Entity" and  request.form[name] != "":                    
+                    data = request.form[name].split(".")                  
+                    domain = data[0]
+                    data = request.form[name].split("-")
+                    friendly_name = data[1] 
+                    entity = {
+                    'entity_id' : data[0],
+                    'domain' : domain,
+                    'friendly_name' : friendly_name
+                    }
+                    entity_id.append(entity)
+                    print(entity)
+            else:
+                break
+        print(entity_id)        
+        # if request.form["entity_id"] == "" or request.form["entity_id"] ==  "Select Entity":
+            # id = request.form["entity_id"]
+            # entity_id = ""
+            # friendly_name = ""
+            # domain = ""
+        # else:
+            # data = request.form["entity_id"].split("-")
+            # entity_id = data[0]
+            # friendly_name = data[1]
+            # data = entity_id.split(".")
+            # domain = data[0]
+            
+        friendly_name = request.form["friendly_name"]    
+        id = randomid(20)        
         enable = 'false'  
         enable_1 = 'false' 
         enable_2 = 'false'
@@ -114,7 +144,6 @@ def add():
         setting   = {'id': id,
                     'entity_id': entity_id,
                     'friendly_name': friendly_name,
-                    'domain': domain,
                     'enable': enable,
                     'enable_1': enable_1,
                     'enable_2': enable_2,
@@ -138,15 +167,41 @@ def add():
                     'OFF_6': request.form["OFF_6"],
                     'OFF_7': request.form["OFF_7"],           
                    }    
-        if id == "" or id ==  "Select Entity":
+        # if id == "" or id ==  "Select Entity":
+        if entity_id == []:
             flash('Error please fill entity id')
+            entity_id = []
+            entity = {
+                    'entity_id' : '',
+                    'domain' : '',
+                    'friendly_name' : ''
+                    }
+            setting["entity_id"].append(entity)
         else:
             write_scheduled(setting)   
             run_daemon()
             load_scheduled()       
             flash('Saved')
         #return redirect(request.url)
+        element_global = setting
         return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun)
+@app.route('/item/add_elem', methods=["GET", "POST"])
+def add_elem():
+        global element_global   
+        entity = {
+                    'entity_id' : '',
+                    'domain' : '',
+                    'friendly_name' : ''
+                    }
+        element_global["entity_id"].append(entity)
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)  
+@app.route('/item/remove_elem/<index>', methods=["GET", "POST"])
+def remove_elem(index):
+        global element_global   
+        indx = int(index)
+        indx = indx - 1
+        del element_global["entity_id"][indx]
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)  
 @app.route('/item/delete/<id>', methods=["GET", "POST"])
 def delete(id):
         global element_global   
@@ -156,7 +211,8 @@ def delete(id):
             run_daemon()
             load_scheduled()       
             flash('Deleted')
-        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)        
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)  
+        
 @app.route('/item/<id>', methods=["GET", "POST"])
 def edit(id):     
     global element_global
@@ -170,11 +226,29 @@ def edit(id):
         return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun)
     else: 
         #print(request)
-        data = request.form["entity_id"].split("-")
-        entity_id = data[0]
-        friendly_name = data[1]
-        data = entity_id.split(".")        
-        domain = data[0]
+        i = 0
+        entity_id = []
+        while True:
+            i += 1
+            name = "entity_id_" + str(i)            
+            if name in request.form: 
+              if request.form[name] != "Select Entity" and  request.form[name] != "":    
+                data = request.form[name].split(".")                  
+                domain = data[0]
+                data = request.form[name].split("-")
+                friendly_name = data[1] 
+                entity = {
+                'entity_id' : data[0],
+                'domain' : domain,
+                'friendly_name' : friendly_name
+                }
+                entity_id.append(entity)
+            else:
+                break
+        # data = request.form["entity_id"].split("-")
+        # entity_id = data[0]
+        # friendly_name = data[1]
+        friendly_name = request.form["friendly_name"]
         enable = 'false'
         enable_1 = 'false' 
         enable_2 = 'false'
@@ -288,8 +362,8 @@ def get_elements():
 def load_scheduled():
     global scheduled
     scheduled = []
-    list = os.listdir(FOLDER)
-    for file in list:
+    listf = os.listdir(FOLDER)
+    for file in listf:
        if ".json" in file:
          filename = FOLDER + file
          with open(filename) as json_file:
@@ -307,7 +381,20 @@ def load_scheduled():
            if not 'enable_6' in data:
               data['enable_6'] = 'true' 
            if not 'enable_7' in data:
-              data['enable_7'] = 'true'               
+              data['enable_7'] = 'true'
+           ele = data["entity_id"]   
+           if not isinstance(ele, list): 
+                entity_id = []
+                tmp = ele.split(".")                  
+                domain = tmp[0]
+                entity = {
+                'entity_id' : tmp[0],
+                'domain' : domain,
+                'friendly_name' : data['friendly_name']
+                }
+                entity_id.append(entity)                
+                data['entity_id'] = entity_id
+           
            scheduled.append(data)
            
     scheduled = sorted(scheduled,key=lambda x:x['id'],reverse=False)     

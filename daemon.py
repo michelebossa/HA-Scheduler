@@ -85,9 +85,23 @@ def get_sun():
         #print("Sunset", next_setting.strftime("%H:%M:%S") , "Sunrise", next_rising.strftime("%H:%M:%S") )
        mes = "Sunrise " + next_rising.strftime("%H:%M:%S") + " Sunset " + next_setting.strftime("%H:%M:%S") 
        logging.info( mes )
+def set_temp(elem):
+    URL = "http://hassio/homeassistant/api/services/climate/set_temperature"
+               
+    # defining a params dict for the parameters to be sent to the API 
+    Auth = 'Bearer ' + SUPERVISOR_TOKEN
+    data = {'entity_id': elem["id"] , 'temperature' : elem["temp"]}
+    #print(Auth)
+    headers = {'content-type': 'application/json', 'Authorization' : Auth } 
+          
+    # sending get request and saving the response as response object 
+    response = requests.post(url = URL, headers=headers,json=data)      
+    mes = str(elem["id"]) + " Set Temp " + elem["temp"] + " " + str(response.status_code) 
     
 def call_service(**elem):
     service = ""
+    if elem["dominio"] == "climate" and elem["temp"] != "":
+       set_temp(elem)
     if elem["dominio"] == "cover":
         if elem["action"].lower() == "on":
            service = "/open_cover"
@@ -120,6 +134,12 @@ def get_second(input):
      return int(seconds)
    else: 
      return int(input)
+
+def get_temp(input):
+   if ":T" in input:   
+     return  str(input.split(":T")[1])
+   else: 
+     return ""
      
 def get_schedule_today( ):
     global scheduled_today 
@@ -127,6 +147,7 @@ def get_schedule_today( ):
     now = datetime.now()
     day = now.isoweekday()
     for sche in scheduled:
+        temp = ""
         time_sched_on = ""
         time_sched_off = ""
         name = "ON_" + str(day)
@@ -134,6 +155,9 @@ def get_schedule_today( ):
         name = "OFF_" + str(day)
         time_sched_off = sche[name]
         if time_sched_on != "" or time_sched_off != "":
+           temp = get_temp(time_sched_on)
+           time_sched_on = time_sched_on.split(":T")[0]
+           time_sched_off = time_sched_off.split(":T")[0]
            if time_sched_on != "" and "sunrise" in time_sched_on:
              if "+" in time_sched_on or "-" in time_sched_on:
                if "+" in time_sched_on:
@@ -194,15 +218,28 @@ def get_schedule_today( ):
              else:
                  time_sched_off = next_setting.strftime("%H:%M:%S")                     
            
-           sched_today = {
-             "id" : sche["id"],
-             "entity_id": sche["entity_id"],
-             "domain" : sche["domain"],
-             "ON" : time_sched_on,
-             "OFF" : time_sched_off,
-           }
-           scheduled_today.append(sched_today)
-           
+           if not isinstance(sche["entity_id"], list):
+               sched_today = {
+                 "id" : sche["id"],
+                 "entity_id": sche["entity_id"],
+                 "domain" : sche["domain"],
+                 "ON" : time_sched_on,
+                 "OFF" : time_sched_off,
+                 "temp" : temp,
+               }
+               scheduled_today.append(sched_today)
+           else:
+               for elem in  sche["entity_id"]:
+                   sched_today = {
+                     "id" : sche["id"],
+                     "entity_id": elem["entity_id"],
+                     "domain" : elem["domain"],
+                     "ON" : time_sched_on,
+                     "OFF" : time_sched_off,
+                     "temp" : temp,
+                   }
+                   scheduled_today.append(sched_today)                  
+      
 def check_HA(**elem):
 
   times = max_retries
@@ -221,10 +258,13 @@ def check_HA(**elem):
       response = requests.get(url = URL, headers=headers) 
       json_data = response.json()   
       #print(json_data["state"])     
-      mes = "ID" + elem["id"]  + " RET "+ json_data["state"] + " " + str(json_data)
+      if "state" in json_data:
+        mes = "ID" + elem["id"]  + " RET "+ json_data["state"] + " " + str(json_data)
+      else:
+        mes = "ID" + elem["id"]  + " RET "  + str(json_data)
       logging.info( mes )
       if json_data["state"].lower() != elem["action"].lower():
-        call_service(id=elem["id"],dominio=elem["dominio"],action=elem["action"])
+        call_service(id=elem["id"],dominio=elem["dominio"],action=elem["action"],temp=elem["temp"])
         times -= 1
       else:
         times = 0
@@ -282,7 +322,7 @@ scheduler = sched.scheduler(time.time, time.sleep)
 now = datetime.now()
    
 current_date = now.strftime("%Y-%m-%d")
-   
+  
 for sche in scheduled_today:
   time_sched = sche["ON"]
   if time_sched != "":
@@ -293,7 +333,7 @@ for sche in scheduled_today:
     now_t = time.strptime(ora.strftime("%Y-%m-%d %H:%M:%S"), '%Y-%m-%d %H:%M:%S')
     now_t = time.mktime(now_t)
     if t > now_t:
-        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "on"}
+        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "on","temp":sche["temp"]}
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
         if sche["domain"] != "cover":
             scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
@@ -307,13 +347,20 @@ for sche in scheduled_today:
     now_t = time.strptime(ora.strftime("%Y-%m-%d %H:%M:%S"), '%Y-%m-%d %H:%M:%S')
     now_t = time.mktime(now_t)
     if t > now_t:    
-        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "OFF"}
+        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "OFF","temp":sche["temp"]}
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
         if sche["domain"] != "cover":
             scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
-    
-  mes = sche["entity_id"] + " ON "+ sche["ON"]  + " OFF "+ sche["OFF"]
-  logging.info( mes )
+  
+  if not isinstance(sche["entity_id"], list):
+     mes = sche["entity_id"] + " ON "+ sche["ON"]  + " OFF "+ sche["OFF"] + " T " +  sche["temp"]
+     logging.info( mes )
+  else:
+     for elem in sche["entity_id"]:
+        mes = elem["entity_id"] + " ON "+ sche["ON"]  + " OFF " + sche["OFF"] + " T " +  sche["temp"]
+        logging.info( mes )
+     
+ 
 
 
 date =  current_date + ' 23:59:59'

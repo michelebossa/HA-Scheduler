@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.7
+## 0.9
+
+- Add group for entity
+- Add temperature set for climate entity (BETA)
+
+## 0.8
 
 - Add hassio.addon_stdin function to enable or disable the schedule
 

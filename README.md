@@ -9,13 +9,14 @@ This addon give us the possibility to handle a simple week configuration of auto
 
 Entity setting section:
 
-We can set on or off action every day with follow format:
+We can made a group and set on or off action every day with follow format:
 
 
 - No Fill									( No action on this day	)					
 - HH:MM:SS									( Time format ) 							
 - sunrise/sunset							( Action at sunrise/ sunset 				sunrise/sunset )
--sunrise+30M   (M = Minutes, S = Second)	( Offset + or - at sunrise or sunset )     
+- sunrise+30M   (M = Minutes, S = Second)	( Offset + or - at sunrise or sunset )  
+- :T27										(:T + temperature to set) BETA   
 
 ![edit](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/edit.png)
 
@@ -40,7 +41,7 @@ data:
   input: light_xxx:enable_on
 ```
 
-addon = name of addon 
-input = entity name:action (enable_on or enable_off)
+	addon = name of addon 
+	input = entity name:action (enable_on or enable_off)
 
 <a target="_blank" href="https://www.buymeacoffee.com/michelebossa" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>

@@ -37,24 +37,48 @@
         </div>
         <div class="row">
             <div class="col">
-                <form action="#" method="POST" id="testForm" onsubmit="get_url()">
+                <form action="#" method="POST" id="testForm" onsubmit="get_url('{{elem.id}}')">
                     <div class="row">
                         <div class="col">
+						<div class="row">
+						<div class="col-1">
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" class="custom-control-input" id="enable" name="enable" {{ 'checked' if elem.enable=="true" else ""}}>
-                                <label class="custom-control-label" for="enable">Enable</label>
+                                <label class="custom-control-label" for="enable"></label>
                             </div>
-                            <div class="form-group">
-                                <select class="custom-select my-1 mr-sm-2" id="entity_id" name="entity_id">
-                                    {% if elem.entity_id != "" %}
-                                    <option selected>{{elem.entity_id}}-{{elem.friendly_name}}</option>
-                                    {% else %}
-                                    <option selected>Select Entity</option>
-                                    {% endif %} {% for element in elements %}
-                                    <option value="{{element.id}}-{{element.friendly_name}}">{{element.id}}-{{element.friendly_name}}</option>
-                                    {% endfor %}
-                                </select>
+							 </div>
+							<div class="col">
+							<div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" style="width:110px;">Name</span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Fill Name" name="friendly_name" value="{{elem.friendly_name}}">
                             </div>
+							</div>
+							 </div>
+							{% for entity in elem.entity_id %}
+							<div class="row">
+							<div class="col">
+								<div class="form-group">
+									<select class="custom-select my-1 mr-sm-2" id="entity_id_{{ loop.index  }}" name="entity_id_{{ loop.index  }}">
+										{% if entity.entity_id != "" %}
+										<option selected>{{entity.entity_id}}-{{entity.friendly_name}}</option>
+										{% else %}
+										<option selected>Select Entity</option>
+										{% endif %} {% for element in elements %}
+										<option value="{{element.id}}-{{element.friendly_name}}">{{element.id}}-{{element.friendly_name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+								</div>
+								<div class="col">
+								<div class="btn-group" role="group" aria-label="Basic example">
+								  <button type="button" class="btn btn-primary btn-sm"onclick="add('{{elem.id}}')"><span class="mdi mdi-plus-circle-outline"></span></button>
+								  <button type="button" class="btn btn-secondary btn-sm" onclick="remove('{{elem.id}}',{{ loop.index  }})"><span class="mdi mdi-minus-circle-outline"></span></button>
+								</div>
+								</div>
+							</div>
+							{% endfor %}
                         </div>
                     </div>
                     <div class="row">
@@ -274,21 +298,51 @@
             let url = window.location.href.replace(id, new_path);
             window.location.href = url;
         }
-
-        function get_url() {
-            var url = window.location.href;
+        function add(id) {
+		    <!-- debugger; -->
+            let new_path = "item/add_elem" ;
+			let url = window.origin + '/' + window.location.pathname.substring(1, 64) + new_path;
+			<!-- let url = window.location.href -->
+			<!-- url = url.replace("add_elem/",""); -->
+			<!-- url = url.replace("remove_elem/",""); -->
+            <!-- url = url.replace(id, new_path); -->
+            window.location.href = url;
+        }
+		function remove(id,index) {
+		    <!-- debugger; -->
+            let new_path = "remove_elem/" + index;
+			let url = window.origin + '/' + window.location.pathname.substring(1, 69) + new_path;
+			<!-- url = url.replace("add_elem/",""); -->
+			<!-- url = url.replace("remove_elem/",""); -->
+            <!-- url = url.replace(id, new_path); -->
+            window.location.href = url;
+        }
+        function get_url(id) {
+			<!-- debugger; -->
+			<!-- var url = window.location.href; -->
+			let url = ""
+			if (id == "" ) {
+			 url = window.origin + '/' + window.location.pathname.substring(1, 64) + 'add'; 
+			 }
+			 else
+			 { 
+			   url = window.origin + '/' + window.location.pathname.substring(1, 69) + id; 
+			 }
             document.getElementById('testForm').setAttribute('action', url);
 
         }
-
         function Home(id) {
-            let new_path = "item/" + id;
-            let url = window.location.href.replace(new_path, "");
+            <!-- let new_path = "item/" + id; -->
+            <!-- let url = window.location.href.replace(new_path, ""); -->
 
-            new_path = "item/delete/" + id;
-            url = url.replace(new_path, "");
+            <!-- new_path = "item/delete/" + id; -->
+            <!-- url = url.replace(new_path, ""); -->
 
-            url = url.replace("add", "");
+            <!-- url = url.replace("add", ""); -->
+			<!-- debugger; -->
+			url = window.origin + '/' + window.location.pathname.substring(1, 64) 
+			  
+		 
             window.location.href = url;
 
             // window.history.back(); debugger;
