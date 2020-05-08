@@ -337,6 +337,19 @@ for sche in scheduled_today:
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
         if sche["domain"] != "cover":
             scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
+    else:
+        time_sched = sche["OFF"]
+        if time_sched != "":
+            date =  current_date + ' ' + time_sched
+            t = time.strptime(date, '%Y-%m-%d %H:%M:%S')
+            t = time.mktime(t)
+            ora = datetime.now()
+            now_t = time.strptime(ora.strftime("%Y-%m-%d %H:%M:%S"), '%Y-%m-%d %H:%M:%S')
+            now_t = time.mktime(now_t)
+            if t > now_t:   
+                mes = "Restart Event " + sche["entity_id"] + " ON "
+                logging.info( mes )            
+                call_service(id=sche["entity_id"],dominio=sche["domain"],action="on",temp=sche["temp"])   
     
   time_sched = sche["OFF"]
   if time_sched != "":

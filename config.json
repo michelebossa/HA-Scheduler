@@ -1,6 +1,6 @@
 {
   "name": "HA Scheduler",
-  "version": "0.9",
+  "version": "0.10",
   "slug": "homeassistantscheduler",
   "description": "Home Assistant scheduler",
   "url": "https://github.com/michelebossa/HA-Scheduler",
@@ -21,12 +21,14 @@
   "options": {
     "log_level": "info",
 	"max_retries": 2,
-	"max_retry_interval": 5 
+	"max_retry_interval": 5,
+	"bk_color": "#f8f9fa"
   },
   "schema": {
     "log_level": "list(trace|debug|info|notice|warning|error|fatal)",
 	"max_retries": "int(1,10)",
-	"max_retry_interval": "int(1,120)"
+	"max_retry_interval": "int(1,120)",
+	"bk_color": "str"
   },
   "webui": "http://[HOST]:[PORT:8099]"
 }

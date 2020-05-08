@@ -30,6 +30,7 @@ Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New reposi
     log_level: Level of logging messages default info 
 	max_retries: Number of retrying action default 2
 	max_retry_interval: How many seconds to wait before retrying. default 5
+	bk_color: The background color default vaule #f8f9fa (white) 
 
 ## Home Assistant service
 There is the possibility to enable or disable an entity by call these service on you automation/script:

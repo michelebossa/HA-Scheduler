@@ -13,6 +13,8 @@ pid = 0
 element_global = {}
 sun = {}
 FOLDER = "/share/ha-scheduler/"
+bk_color = "#f8f9fa"
+# bk_color = "#60646c"
 def randomid(length):
    letters = string.ascii_lowercase
    return ''.join(random.choice(letters) for i in range(length))
@@ -38,7 +40,7 @@ def get_sun():
 def index():
     get_deamon_pid()
     get_sun()
-    return render_template('index.html', elements=elements, scheduled=scheduled, pid = pid, sun=sun )
+    return render_template('index.html', elements=elements, scheduled=scheduled, pid = pid, sun=sun,bk_color=bk_color )
 
 @app.route('/add', methods=["GET", "POST"])
 def add():   
@@ -78,7 +80,7 @@ def add():
                     'OFF_7': ''            
                    }
         element_global = elem           
-        return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun )
+        return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun,bk_color=bk_color  )
     else:
 #        print(request)
         entity_id = []
@@ -184,7 +186,7 @@ def add():
             flash('Saved')
         #return redirect(request.url)
         element_global = setting
-        return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun)
+        return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun,bk_color=bk_color )
 @app.route('/item/add_elem', methods=["GET", "POST"])
 def add_elem():
         global element_global   
@@ -194,14 +196,14 @@ def add_elem():
                     'friendly_name' : ''
                     }
         element_global["entity_id"].append(entity)
-        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)  
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun,bk_color=bk_color )  
 @app.route('/item/remove_elem/<index>', methods=["GET", "POST"])
 def remove_elem(index):
         global element_global   
         indx = int(index)
         indx = indx - 1
         del element_global["entity_id"][indx]
-        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)  
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun,bk_color=bk_color )  
 @app.route('/item/delete/<id>', methods=["GET", "POST"])
 def delete(id):
         global element_global   
@@ -211,7 +213,7 @@ def delete(id):
             run_daemon()
             load_scheduled()       
             flash('Deleted')
-        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun)  
+        return render_template('edit.html',elem=element_global, elements=elements, pid = pid, sun=sun,bk_color=bk_color )  
         
 @app.route('/item/<id>', methods=["GET", "POST"])
 def edit(id):     
@@ -223,7 +225,7 @@ def edit(id):
             elem = el
         
         element_global = elem       
-        return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun)
+        return render_template('edit.html',elem=elem, elements=elements, pid = pid, sun=sun,bk_color=bk_color )
     else: 
         #print(request)
         i = 0
@@ -305,7 +307,7 @@ def edit(id):
         load_scheduled()
         flash('Saved')
         element_global = setting 
-        return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun)
+        return render_template('edit.html',elem=setting, elements=elements, pid = pid, sun=sun,bk_color=bk_color )
         
 @app.route('/reload',methods=['POST'])
 def reload():
@@ -323,7 +325,7 @@ def log():
             data = file.read()
    except IOError:
        print("Missing Log")
-   return render_template('log.html',data=data, pid = pid, sun=sun)
+   return render_template('log.html',data=data, pid = pid, sun=sun,bk_color=bk_color )
     
 def get_elements():
     global elements    
@@ -423,6 +425,12 @@ def run_daemon():
 if __name__ == '__main__':
                         
     SUPERVISOR_TOKEN = os.environ['SUPERVISOR_TOKEN']
+    with open("/data/options.json") as json_file:
+         config = json.load(json_file)
+         if "bk_color" in config:
+           if config["bk_color"] != "":
+               bk_color = config["bk_color"]
+     
     run_daemon()
     #print(SUPERVISOR_TOKEN)
     load_scheduled()

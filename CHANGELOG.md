@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10
+
+- Check at reboot if there is an entity to set on based the  scheduled time 
+- Add new option in config to set background color
+
 ## 0.9
 
 - Add group for entity
