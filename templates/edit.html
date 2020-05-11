@@ -329,7 +329,8 @@
 			 }
 			 else
 			 { 
-			   url = window.origin + '/' + window.location.pathname.substring(1, 69) + id; 
+			   <!-- url = window.origin + '/' + window.location.pathname.substring(1, 69) + id;  -->
+			   url = window.origin + '/' + window.location.pathname.substring(1, 64) + 'item/' + id;
 			 }
             document.getElementById('testForm').setAttribute('action', url);
 

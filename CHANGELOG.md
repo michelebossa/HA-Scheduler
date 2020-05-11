@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11
+
+- Fix duble save new schedule
+- Fix group name into addon_stdin functionality
+
 ## 0.10
 
 - Check at reboot if there is an entity to set on based the  scheduled time 

@@ -14,7 +14,7 @@ for file in list:
       filename = FOLDER + file
       with open(filename) as json_file:
         data = json.load(json_file)
-      if data['entity_id'] == input[0]:
+      if data['friendly_name'] == input[0]:
         #print("trovato", data['entity_id'])
         if input[1] == "enable_on":
             data["enable"] = 'true'

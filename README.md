@@ -39,10 +39,10 @@ There is the possibility to enable or disable an entity by call these service on
 service: hassio.addon_stdin
 data:
   addon: 998c1fd8_homeassistantscheduler
-  input: light_xxx:enable_on
+  input: light_group:enable_on
 ```
 
 	addon = name of addon 
-	input = entity name:action (enable_on or enable_off)
+	input = group name:action (enable_on or enable_off)
 
 <a target="_blank" href="https://www.buymeacoffee.com/michelebossa" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
