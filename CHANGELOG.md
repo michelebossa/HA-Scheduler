@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12
+
+- Add filter to drop-down selection box
+
 ## 0.11
 
 - Fix duble save new schedule
