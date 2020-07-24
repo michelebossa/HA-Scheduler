@@ -330,7 +330,7 @@ def log():
 def get_elements():
     global elements    
     elements = []
-    domains = ["automation","light","binary_sensor","switch","script","climate","cover"]
+    domains = ["automation","light","binary_sensor","switch","script","climate","cover","input_boolean"]
     URL = "http://hassio/homeassistant/api/states"
                
     # defining a params dict for the parameters to be sent to the API 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.13
+
+- Add input_boolean
+
 ## 0.12
 
 - Add filter to drop-down selection box
