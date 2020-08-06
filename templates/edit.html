@@ -1,362 +1,326 @@
 <html>
-
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-	
-    <title>Hello, world!</title>
-<style type="text/css">
-   body { background: {{ bk_color }} !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
-</style>		
-</head>
-
-<body>
-    <div class="row">
-        <div class="col">
-
-            <button type="button" class="btn btn-light" onclick="Home('{{elem.id}}')"><span class="mdi mdi-home"></span></button>
-        </div>
-        <div class="col">
-            <div class="float-right">
-                <button type="button" class="btn btn-link">PID {{ pid }}</button>
-                <button type="button" class="btn btn-link"><span class="mdi mdi-weather-sunset-up"></span> {{ sun.sunrise }} <span class="mdi mdi-weather-sunset-down"></span> {{ sun.sunset }}</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="container w-75">
-        <div class="row">
-            {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for message in messages %} {% if "Error" not in message[1]: %}
-            <div class="alert alert-info">
-                <strong>{{ message[1] }}</strong> </div>
-            {% endif %} {% if "Error" in message[1]: %}
-            <div class="alert alert-warning">
-                {{ message[1] }}</div>
-            {% endif %} {% endfor %} {% endif %} {% endwith %}
-        </div>
-        <div class="row">
-            <div class="col">
-                <form action="#" method="POST" id="testForm" onsubmit="get_url('{{elem.id}}')">
-                    <div class="row">
-                        <div class="col">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+			integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+		<title>Edit schedule</title>
+		<style type="text/css">
+			body {
+				background: {{ bk_color }} !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="row">
+			<div class="col">
+				<button type="button" class="btn btn-light" onclick="Home('{{elem.id}}')">
+				<span class="mdi mdi-home"></span>
+				</button>
+			</div>
+			<div class="col">
+				<div class="float-right">
+					<button type="button" class="btn btn-link">PID {{ pid }}</button>
+					<button type="button" class="btn btn-link">
+					<span class="mdi mdi-weather-sunset-up"></span>
+					{{ sun.sunrise }}
+					<span class="mdi mdi-weather-sunset-down"></span>
+					{{ sun.sunset }}
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="container w-75">
+			<div class="row">
+				{% with messages = get_flashed_messages(with_categories=true) %}
+				{% if messages %}
+				{% for message in messages %}
+				{% if "Error" not in message[1]: %}
+				<div class="alert alert-info">
+					<strong>{{ message[1] }}</strong> 
+				</div>
+				{% endif %} {% if "Error" in message[1]: %}
+				<div class="alert alert-warning">
+					{{ message[1] }}
+				</div>
+				{% endif %} {% endfor %} {% endif %} {% endwith %}
+			</div>
+			<div class="row">
+				<div class="col">
+					<form action="#" method="POST" id="editForm" onsubmit="get_url('{{elem.id}}')">
 						<div class="row">
-						<div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable" name="enable" {{ 'checked' if elem.enable=="true" else ""}}>
-                                <label class="custom-control-label" for="enable"></label>
-                            </div>
-							 </div>
 							<div class="col">
-							<div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" style="width:110px;">Name</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Fill Name" name="friendly_name" value="{{elem.friendly_name}}">
-                            </div>
+								<div class="row">
+									<div class="col-1">
+										<div class="custom-control custom-switch">
+											<input type="checkbox" class="custom-control-input" id="enable"
+											name="enable" {{'checked' if elem.enable=="true" else ""}}>
+											<label class="custom-control-label" for="enable"></label>
+										</div>
+									</div>
+									<div class="col">
+										<div class="input-group mb-3">
+											<div class="input-group-prepend">
+												<span class="input-group-text" style="width:110px;">Name</span>
+											</div>
+											<input type="text" class="form-control" placeholder="Fill Name" name="friendly_name"
+												value="{{elem.friendly_name}}">
+										</div>
+									</div>
+								</div>
+								{% for entity in elem.entity_id %}
+								<div class="row">
+									<div class="col">
+										<div class="form-group">
+											<select class="selectpicker" id="entity_id_{{ loop.index }}" data-width="fit" data-live-search="true" name="entity_id_{{ loop.index }}">
+												{% if entity.entity_id != "" %}
+												<option>{{entity.entity_id}}-{{entity.friendly_name}}</option>
+												{% else %}
+												<option>Select an entity</option>
+												{% endif %} {% for element in elements %}
+												<option value="{{element.id}}-{{element.friendly_name}}">{{element.id}}-{{element.friendly_name}}</option>
+												{% endfor %}
+											</select>
+										</div>
+									</div>
+									<div class="col">
+										<div class="btn-group" role="group" aria-label="Basic example">
+											<button type="button" class="btn btn-primary btn-sm" onclick="add('{{elem.id}}')">
+											<span class="mdi mdi-plus-circle-outline"></span>
+											</button>
+											<button type="button" class="btn btn-secondary btn-sm" onclick="remove('{{elem.id}}',{{ loop.index }})">
+											<span class="mdi mdi-minus-circle-outline"></span>
+											</button>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
 							</div>
-							 </div>
-							{% for entity in elem.entity_id %}
-							<div class="row">
+						</div>
+						<div class="row">
+							<div class="col-1">
+								Enable
+							</div>
 							<div class="col">
-								<div class="form-group">
-									<select class="selectpicker " id="entity_id_{{ loop.index  }}" data-width="fit" data-live-search="true" name="entity_id_{{ loop.index  }}">
-										{% if entity.entity_id != "" %}
-										<option>{{entity.entity_id}}-{{entity.friendly_name}}</option>
-										{% else %}
-										<option>Select Entity</option>
-										{% endif %} {% for element in elements %}
-										<option value="{{element.id}}-{{element.friendly_name}}">{{element.id}}-{{element.friendly_name}}</option>
-										{% endfor %}
-									</select>
-								</div>
-								</div>
-								<div class="col">
-								<div class="btn-group" role="group" aria-label="Basic example">
-								  <button type="button" class="btn btn-primary btn-sm" onclick="add('{{elem.id}}')"><span class="mdi mdi-plus-circle-outline"></span></button>
-								  <button type="button" class="btn btn-secondary btn-sm" onclick="remove('{{elem.id}}',{{ loop.index  }})"><span class="mdi mdi-minus-circle-outline"></span></button>
-								</div>
+								ON
+							</div>
+							<div class="col">
+								OFF
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_1" name="enable_1" {{ 'checked' if elem.enable_1=="true" else ""}}>
+									<label class="custom-control-label" for="enable_1"></label>
 								</div>
 							</div>
-							{% endfor %}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-1">
-                            Enable
-                        </div>
-                        <div class="col">
-                            ON
-                        </div>
-                        <div class="col">
-                            OFF
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_1" name="enable_1" {{ 'checked' if elem.enable_1=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_1"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Monday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_1" value="{{elem.ON_1}}">
-                            </div>
-                        </div>
-                        <div class="col">
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Monday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_1" value="{{elem.OFF_1}}">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_2" name="enable_2" {{ 'checked' if elem.enable_2=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_2"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Tuesday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_2" value="{{elem.ON_2}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Tuesday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_2" value="{{elem.OFF_2}}">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_3" name="enable_3" {{ 'checked' if elem.enable_3=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_3"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Wednesday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_3" value="{{elem.ON_3}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Wednesday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_3" value="{{elem.OFF_3}}">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_4" name="enable_4" {{ 'checked' if elem.enable_4=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_4"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Thursday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_4" value="{{elem.ON_4}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Thursday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_4" value="{{elem.OFF_4}}">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_5" name="enable_5" {{ 'checked' if elem.enable_5=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_5"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Friday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_5" value="{{elem.ON_5}}">
-                            </div>
-                        </div>
-                        <div class="col">
-
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Friday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_5" value="{{elem.OFF_5}}">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_6" name="enable_6" {{ 'checked' if elem.enable_6=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_6"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Saturday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_6" value="{{elem.ON_6}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Saturday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_6" value="{{elem.OFF_6}}">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-1">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="enable_7" name="enable_7" {{ 'checked' if elem.enable_7=="true" else ""}}>
-                                <label class="custom-control-label" for="enable_7"></label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-success text-white" style="width:110px;">Sunday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_7" value="{{elem.ON_7}}">
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text bg-danger text-white" style="width:110px;">Sunday</span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_7" value="{{elem.OFF_7}}">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary"><span class="mdi mdi-content-save"></span></button>
-                    <button type="button" class="btn btn-danger" onclick="Delete('{{elem.id}}')"><span class="mdi mdi-trash-can-outline"></span></button>
-                </form>
-
-                <div class="col">
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-<!-- Latest compiled and minified JavaScript -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script>
-        function Delete(id) {
-            let new_path = "delete/" + id;
-            let url = window.location.href.replace(id, new_path);
-            window.location.href = url;
-        }
-        function add(id) {
-		    <!-- debugger; -->
-            let new_path = "item/add_elem" ;
-			let url = window.origin + '/' + window.location.pathname.substring(1, 64) + new_path;
-			<!-- let url = window.location.href -->
-			<!-- url = url.replace("add_elem/",""); -->
-			<!-- url = url.replace("remove_elem/",""); -->
-            <!-- url = url.replace(id, new_path); -->
-            window.location.href = url;
-        }
-		function remove(id,index) {
-		    <!-- debugger; -->
-            let new_path = "remove_elem/" + index;
-			let url = window.origin + '/' + window.location.pathname.substring(1, 69) + new_path;
-			<!-- url = url.replace("add_elem/",""); -->
-			<!-- url = url.replace("remove_elem/",""); -->
-            <!-- url = url.replace(id, new_path); -->
-            window.location.href = url;
-        }
-        function get_url(id) {
-			<!-- debugger; -->
-			<!-- var url = window.location.href; -->
-			let url = ""
-			if (id == "" ) {
-			 url = window.origin + '/' + window.location.pathname.substring(1, 64) + 'add'; 
-			 }
-			 else
-			 { 
-			   <!-- url = window.origin + '/' + window.location.pathname.substring(1, 69) + id;  -->
-			   url = window.origin + '/' + window.location.pathname.substring(1, 64) + 'item/' + id;
-			 }
-            document.getElementById('testForm').setAttribute('action', url);
-
-        }
-        function Home(id) {
-            <!-- let new_path = "item/" + id; -->
-            <!-- let url = window.location.href.replace(new_path, ""); -->
-
-            <!-- new_path = "item/delete/" + id; -->
-            <!-- url = url.replace(new_path, ""); -->
-
-            <!-- url = url.replace("add", ""); -->
-			<!-- debugger; -->
-			url = window.origin + '/' + window.location.pathname.substring(1, 64) 
-			  
-		 
-            window.location.href = url;
-
-            // window.history.back(); debugger;
-
-        }
-    </script>
-</body>
-
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Monday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_1" value="{{elem.ON_1}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Monday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_1" value="{{elem.OFF_1}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_2" name="enable_2" {{ 'checked' if elem.enable_2=="true" else ""}}>
+									<label class="custom-control-label" for="enable_2"></label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Tuesday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_2" value="{{elem.ON_2}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Tuesday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_2" value="{{elem.OFF_2}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_3" name="enable_3" {{ 'checked' if elem.enable_3=="true" else ""}}>
+									<label class="custom-control-label" for="enable_3"></label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Wednesday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_3" value="{{elem.ON_3}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Wednesday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_3" value="{{elem.OFF_3}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_4" name="enable_4" {{ 'checked' if elem.enable_4=="true" else ""}}>
+									<label class="custom-control-label" for="enable_4"></label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Thursday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_4" value="{{elem.ON_4}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Thursday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_4" value="{{elem.OFF_4}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_5" name="enable_5" {{ 'checked' if elem.enable_5=="true" else ""}}>
+									<label class="custom-control-label" for="enable_5"></label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Friday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_5" value="{{elem.ON_5}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Friday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_5" value="{{elem.OFF_5}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_6" name="enable_6" {{ 'checked' if elem.enable_6=="true" else ""}}>
+									<label class="custom-control-label" for="enable_6"></label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Saturday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_6" value="{{elem.ON_6}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Saturday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_6" value="{{elem.OFF_6}}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-1">
+								<div class="custom-control custom-switch">
+									<input type="checkbox" class="custom-control-input" id="enable_7" name="enable_7" {{ 'checked' if elem.enable_7=="true" else ""}}>
+									<label class="custom-control-label" for="enable_7"></label>
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-success text-white" style="width:110px;">Sunday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="ON_7" value="{{elem.ON_7}}">
+								</div>
+							</div>
+							<div class="col">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-danger text-white" style="width:110px;">Sunday</span>
+									</div>
+									<input type="text" class="form-control" placeholder="HH:MM:SS or sunrise/sunset" name="OFF_7" value="{{elem.OFF_7}}">
+								</div>
+							</div>
+						</div>
+						<button type="submit" class="btn btn-primary"><span class="mdi mdi-content-save"></span></button>
+						<button type="button" class="btn btn-danger" onclick="Delete('{{elem.id}}')"><span class="mdi mdi-trash-can-outline"></span></button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+		<script>
+			function Delete(id) {
+				let new_path = "delete/" + id;
+				let url = window.location.href.replace(id, new_path);
+				window.location.href = url;
+			}
+			function add(id) {
+				let new_path = "item/add_elem" ;
+				let url = window.origin + '/' + window.location.pathname.substring(1, 64) + new_path;
+				window.location.href = url;
+			}
+			function remove(id,index) {
+				let new_path = "remove_elem/" + index;
+				let url = window.origin + '/' + window.location.pathname.substring(1, 69) + new_path;
+				window.location.href = url;
+			}
+			function get_url(id) {
+				let url = ""
+				if (id == "") {
+					url = window.origin + '/' + window.location.pathname.substring(1, 64) + 'add';
+				} else {
+					url = window.origin + '/' + window.location.pathname.substring(1, 64) + 'item/' + id;
+				}
+				document.getElementById('editForm').setAttribute('action', url);
+			}
+			function Home(id) {
+				url = window.origin + '/' + window.location.pathname.substring(1, 64)
+				window.location.href = url;
+			}
+		</script>
+	</body>
 </html>
