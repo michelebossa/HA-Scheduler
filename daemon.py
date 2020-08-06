@@ -115,7 +115,10 @@ def call_service(**elem):
                
     # defining a params dict for the parameters to be sent to the API 
     Auth = 'Bearer ' + SUPERVISOR_TOKEN
-    data = {'entity_id': elem["id"] }
+    if elem["dominio"] == "light" and elem["brightness"] != "" and elem["action"] == "on":
+       data = {'entity_id': elem["id"] , 'brightness_pct' : elem["brightness"] }
+    else:
+       data = {'entity_id': elem["id"] }
     #print(Auth)
     headers = {'content-type': 'application/json', 'Authorization' : Auth } 
           
@@ -140,7 +143,11 @@ def get_temp(input):
      return  str(input.split(":T")[1])
    else: 
      return ""
-     
+def get_brightness(input):
+   if ":B" in input:   
+     return  str(input.split(":B")[1])
+   else: 
+     return ""     
 def get_schedule_today( ):
     global scheduled_today 
     scheduled_today = []
@@ -148,6 +155,7 @@ def get_schedule_today( ):
     day = now.isoweekday()
     for sche in scheduled:
         temp = ""
+        brightness = ""
         time_sched_on = ""
         time_sched_off = ""
         name = "ON_" + str(day)
@@ -156,8 +164,11 @@ def get_schedule_today( ):
         time_sched_off = sche[name]
         if time_sched_on != "" or time_sched_off != "":
            temp = get_temp(time_sched_on)
+           brightness = get_brightness(time_sched_on)
            time_sched_on = time_sched_on.split(":T")[0]
            time_sched_off = time_sched_off.split(":T")[0]
+           time_sched_on = time_sched_on.split(":B")[0]
+           time_sched_off = time_sched_off.split(":B")[0]           
            if time_sched_on != "" and "sunrise" in time_sched_on:
              if "+" in time_sched_on or "-" in time_sched_on:
                if "+" in time_sched_on:
@@ -226,6 +237,7 @@ def get_schedule_today( ):
                  "ON" : time_sched_on,
                  "OFF" : time_sched_off,
                  "temp" : temp,
+                 "brightness" : brightness,
                }
                scheduled_today.append(sched_today)
            else:
@@ -237,6 +249,7 @@ def get_schedule_today( ):
                      "ON" : time_sched_on,
                      "OFF" : time_sched_off,
                      "temp" : temp,
+                     "brightness" : brightness,
                    }
                    scheduled_today.append(sched_today)                  
       
@@ -264,7 +277,7 @@ def check_HA(**elem):
         mes = "ID" + elem["id"]  + " RET "  + str(json_data)
       logging.info( mes )
       if json_data["state"].lower() != elem["action"].lower():
-        call_service(id=elem["id"],dominio=elem["dominio"],action=elem["action"],temp=elem["temp"])
+        call_service(id=elem["id"],dominio=elem["dominio"],action=elem["action"],temp=elem["temp"],brightness=elem["brightness"])
         times -= 1
       else:
         times = 0
@@ -333,7 +346,7 @@ for sche in scheduled_today:
     now_t = time.strptime(ora.strftime("%Y-%m-%d %H:%M:%S"), '%Y-%m-%d %H:%M:%S')
     now_t = time.mktime(now_t)
     if t > now_t:
-        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "on","temp":sche["temp"]}
+        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "on","temp":sche["temp"],"brightness":sche["brightness"]}
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
         if sche["domain"] != "cover":
             scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
@@ -349,7 +362,7 @@ for sche in scheduled_today:
             if t > now_t:   
                 mes = "Restart Event " + sche["entity_id"] + " ON "
                 logging.info( mes )            
-                call_service(id=sche["entity_id"],dominio=sche["domain"],action="on",temp=sche["temp"])   
+                call_service(id=sche["entity_id"],dominio=sche["domain"],action="on",temp=sche["temp"],brightness=sche["brightness"])   
     
   time_sched = sche["OFF"]
   if time_sched != "":
@@ -360,17 +373,17 @@ for sche in scheduled_today:
     now_t = time.strptime(ora.strftime("%Y-%m-%d %H:%M:%S"), '%Y-%m-%d %H:%M:%S')
     now_t = time.mktime(now_t)
     if t > now_t:    
-        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "OFF","temp":sche["temp"]}
+        param = {"id": sche["entity_id"],"dominio":sche["domain"],"action": "OFF","temp":sche["temp"],"brightness":sche["brightness"]}
         scheduler.enterabs(t, 1 ,call_service, argument=(), kwargs=param )
         if sche["domain"] != "cover":
             scheduler.enterabs(t + 2, 2 ,check_HA, argument=(), kwargs=param )
   
   if not isinstance(sche["entity_id"], list):
-     mes = sche["entity_id"] + " ON "+ sche["ON"]  + " OFF "+ sche["OFF"] + " T " +  sche["temp"]
+     mes = sche["entity_id"] + " ON "+ sche["ON"]  + " OFF "+ sche["OFF"] + " T " +  sche["temp"] + ' B' + sche["brightness"]
      logging.info( mes )
   else:
      for elem in sche["entity_id"]:
-        mes = elem["entity_id"] + " ON "+ sche["ON"]  + " OFF " + sche["OFF"] + " T " +  sche["temp"]
+        mes = elem["entity_id"] + " ON "+ sche["ON"]  + " OFF " + sche["OFF"] + " T " +  sche["temp"] + ' B' + sche["brightness"]
         logging.info( mes )
      
  

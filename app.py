@@ -399,7 +399,7 @@ def load_scheduled():
            
            scheduled.append(data)
            
-    scheduled = sorted(scheduled,key=lambda x:x['id'],reverse=False)     
+    scheduled = sorted(scheduled,key=lambda x:x['friendly_name'],reverse=False)     
 def call_service(dominio,id,action):
     URL = "http://hassio/homeassistant/api/services/" + dominio + "/turn_" + action
                

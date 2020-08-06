@@ -16,7 +16,8 @@ We can made a group and set on or off action every day with follow format:
 - HH:MM:SS									( Time format ) 							
 - sunrise/sunset							( Action at sunrise/ sunset 				sunrise/sunset )
 - sunrise+30M   (M = Minutes, S = Second)	( Offset + or - at sunrise or sunset )  
-- :T27										(:T + temperature to set) BETA   
+- :T27										(:T + temperature to set)  
+- :B50										(:B + brightness value between 0 <> 100 to set) only light entity BETA   
 
 ![edit](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/edit.png)
 

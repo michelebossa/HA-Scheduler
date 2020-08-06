@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.14
+
+- Add brightness set for light entity (BETA)
+- FIX sort group name 
+
 ## 0.13
 
 - Add input_boolean
