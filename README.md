@@ -1,15 +1,17 @@
 # HA-Scheduler
-Scheduler Addon Home Hassistant
+Scheduler Addon for Home Hassistant
 
-This addon give us the possibility to handle a simple week configuration of automation, light, binary_sensor, climate, cover, switch and script.
+This addon handles a week of configuration for automation, light, binary_sensor, climate, cover, switch and script.
+
+![code style](https://img.shields.io/badge/Code%20style-Black-black)
 
 
 ![main](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/main.png)
 
 
-Entity setting section:
+Edit section:
 
-We can made a group and set on or off action every day with follow format:
+We can make a group and set on or off action every day with following format:
 
 
 - No Fill									( No action on this day	)					
@@ -24,7 +26,7 @@ We can made a group and set on or off action every day with follow format:
 
 # Installation
 
-Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New repository URL" after install it.
+Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New repository URL", and then close the dialog. Scroll down, choose "HA-Scheduler", and install it.
 
 # Configuration
 
@@ -34,7 +36,7 @@ Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New reposi
 	bk_color: The background color default vaule #f8f9fa (white) 
 
 ## Home Assistant service
-There is the possibility to enable or disable an entity by call these service on you automation/script:
+There is the possibility to enable or disable an entity by calling this service on your automation/script:
 
 ```yaml
 service: hassio.addon_stdin
