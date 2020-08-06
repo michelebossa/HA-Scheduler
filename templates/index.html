@@ -1,140 +1,165 @@
 <!doctype html>
 <html lang="en">
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+			  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css" >
+		<title>HA Scheduler</title>
+		<style type="text/css">
+			body {
+				background: {{ bk_color }} !important;
+			}
+			.addbutton {
+				position: fixed;
+				top: 10%;
+				right: 10%;
+				border-radius: 100%;
+				width: 4em;
+				height: 4em;
+				box-shadow: 1px 2px 5px 0 #888;
+			}
+			.mdi {
+				font-size: 1.5em;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="row">
+			<div class="col">
+				<button type="button" class="btn btn-light" onclick="Home()">
+					<span class="mdi mdi-home"></span>
+				</button>
+				<button type="button" class="btn btn-light" onclick="Reload()">
+					<span class="mdi mdi-reload"></span>
+				</button>
+				<button type="button" class="btn btn-light" onclick="Log()">
+					<span class="mdi mdi-math-log"></span>
+				</button>
+			</div>
+			<div class="col">
+				<div class="float-right">
+					<button type="button" class="btn btn-link">PID {{ pid }}</button>
+					<button type="button" class="btn btn-link">
+						<span class="mdi mdi-weather-sunset-up"></span>
+						{{ sun.sunrise }}
+						<span class="mdi mdi-weather-sunset-down"></span>
+						{{ sun.sunset }}
+					</button>
+				</div>
+			</div>
+		</div>
 
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		{% for sched in scheduled %}
+		<div class="card" style="background-color: {{ bk_color }};">
+			<div class="card-body">
+				<div class="row">
+					<div class="col">
+						<h5 class="card-title text-primary">{{ sched.friendly_name }}</h5>
+					</div>
+					<div class="col">
+						<div class="float-right">
+							<button type="button" class="btn btn-light" onclick="Edit('{{ sched.id }}')"><span class="mdi mdi-table-edit"></span></button>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive">
+					<table class="table table-sm">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.materialdesignicons.com/5.0.45/css/materialdesignicons.min.css" >
- 
-    <title>HA Scheduler</title>
-<style type="text/css">
-   body { background: {{ bk_color }} !important; } /* Adding !important forces the browser to overwrite the default style applied by Bootstrap */
-</style>	
-</head>
+						<thead>
+							<tr>
+								<th scope="col">
+									<div class="custom-control custom-switch">
+										<input type="checkbox" class="custom-control-input" disabled
+											   id="enable" name="enable" {{'checked' if sched.enable == "true" else ""}}>
+										<label class="custom-control-label" for="enable"></label>
+									</div>
+								</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_1 == "false" else "" }}>Mon</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_2 == "false" else "" }}>Tue</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_3 == "false" else "" }}>Wed</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_4 == "false" else "" }}>Thu</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_5 == "false" else "" }}>Fri</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_6 == "false" else "" }}>Sat</th>
+								<th scope="col" {{ 'style=color:grey;' if sched.enable_7 == "false" else "" }}>Sun</th>
+							</tr>
+						</thead>
 
-<body>
-    <div class="row">
-        <div class="col">
+						<tbody>
+							<tr>
+								<th scope="row" class="text-success">ON</td>
+								<td>{{ sched.ON_1 }}</td>
+								<td>{{ sched.ON_2 }}</td>
+								<td>{{ sched.ON_3 }}</td>
+								<td>{{ sched.ON_4 }}</td>
+								<td>{{ sched.ON_5 }}</td>
+								<td>{{ sched.ON_6 }}</td>
+								<td>{{ sched.ON_7 }}</td>
+							</tr>
+							<tr>
+								<th scope="row" class="text-danger">OFF</td>
+								<td>{{ sched.OFF_1 }}</td>
+								<td>{{ sched.OFF_2 }}</td>
+								<td>{{ sched.OFF_3 }}</td>
+								<td>{{ sched.OFF_4 }}</td>
+								<td>{{ sched.OFF_5 }}</td>
+								<td>{{ sched.OFF_6 }}</td>
+								<td>{{ sched.OFF_7 }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+		<div>
+			<button type="button" onclick="Add()" class="btn btn-danger btn-circle addbutton">
+				<span class="mdi mdi-plus"></span>
+			</button>
+		</div>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+				integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+				integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script>
+			function Reload() {
+			$.post({
+			url: "reload",
+			data: JSON.stringify("{}"),
+			success: function(data) {
+			location.reload();
 
-            <button type="button" class="btn btn-light" onclick="Home()"><span class="mdi mdi-home"></span></button>
-            <button type="button" class="btn btn-light" onclick="Reload()"><span class="mdi mdi-reload"></span></button>
-            <button type="button" class="btn btn-light" onclick="Log()"><span class="mdi mdi-math-log"></span></button>
-        </div>
-        <div class="col">
-            <div class="float-right">
-			    <button type="button" class="btn btn-link">PID {{ pid }}</button>
-                <button type="button" class="btn btn-link"><span class="mdi mdi-weather-sunset-up"></span> {{ sun.sunrise }} <span class="mdi mdi-weather-sunset-down"></span> {{ sun.sunset }}</button>
-            </div>
-        </div>
-    </div>
+			},
+			dataType: "json",
+			contentType: 'application/json'
+			})
+			}
 
-    {% for sched in scheduled %}
-    <div class="card" style="background-color: {{ bk_color }};">
-        <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <h5 class="card-title text-primary">{{ sched.friendly_name }}</h5>
-                </div>
-                <div class="col">
-                    <div class="float-right">
-                        <button type="button" class="btn btn-light" onclick="Edit('{{ sched.id }}')"><span class="mdi mdi-table-edit"></span></button>
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-sm">
+			function Home() {
+			let url = window.location.href;
+			window.location.href = url;
 
-                    <thead>
-                        <tr>
-                            <th scope="col">						
-							<div class="custom-control custom-switch">
-							  <input type="checkbox" class="custom-control-input" disabled id="enable" name="enable" {{'checked' if sched.enable == "true" else ""}}>
-							  <label class="custom-control-label" for="enable"></label>
-							</div>							
-							</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_1 == "false" else "" }}>Mon</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_2 == "false" else "" }}>Tue</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_3 == "false" else "" }}>Wed</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_4 == "false" else "" }}>Thu</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_5 == "false" else "" }}>Fri</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_6 == "false" else "" }}>Sat</th>
-                            <th scope="col" {{ 'style=color:grey;' if sched.enable_7 == "false" else "" }}>Sun</th>
-                        </tr>
-                    </thead>
+			}
 
-                    <tbody>
-                        <tr>
-                            <th scope="row" class="text-success">ON</td>
-                                <td>{{ sched.ON_1 }}</td>
-                                <td>{{ sched.ON_2 }}</td>
-                                <td>{{ sched.ON_3 }}</td>
-                                <td>{{ sched.ON_4 }}</td>
-                                <td>{{ sched.ON_5 }}</td>
-                                <td>{{ sched.ON_6 }}</td>
-                                <td>{{ sched.ON_7 }}</td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="text-danger">OFF</td>
-                                <td>{{ sched.OFF_1 }}</td>
-                                <td>{{ sched.OFF_2 }}</td>
-                                <td>{{ sched.OFF_3 }}</td>
-                                <td>{{ sched.OFF_4 }}</td>
-                                <td>{{ sched.OFF_5 }}</td>
-                                <td>{{ sched.OFF_6 }}</td>
-                                <td>{{ sched.OFF_7 }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-	<div>
-	<button type="button" onclick="Add()" class="btn btn-danger btn-circle" style="position: fixed;top: 10%;right: 10%;border-radius: 100%;"><span class="mdi mdi-plus"></span></button>
-    </div>
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    <script>
-        function Reload() {
-            $.post({
-                url: "reload",
-                data: JSON.stringify("{}"),
-                success: function(data) {
-                   location.reload();
+			function Add() {
+			let url = window.location.href + "add";
+			window.location.href = url;
 
-                },
-                dataType: "json",
-                contentType: 'application/json'
-            })
-        }
+			}
+			function Log() {
+			let url = window.location.href + "log";
+			window.location.href = url;
 
-        function Home() {
-            let url = window.location.href;
-            window.location.href = url;
+			}
+			function Edit(id) {
+			let url = window.location.href + "item/" + id;
+			window.location.href = url;
 
-        }
-
-        function Add() {
-            let url = window.location.href + "add";
-            window.location.href = url;
-
-        }
-        function Log() {
-            let url = window.location.href + "log";
-            window.location.href = url;
-
-        }
-        function Edit(id) {
-            let url = window.location.href + "item/" + id;
-            window.location.href = url;
-
-        }
-    </script>
-</body>
-
+			}
+		</script>
+	</body>
 </html>
