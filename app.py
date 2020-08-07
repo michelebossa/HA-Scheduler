@@ -102,7 +102,6 @@ def add():
             bk_color=bk_color,
         )
     else:
-        #        print(request)
         entity_id = []
         i = 0
         while True:
@@ -179,7 +178,6 @@ def add():
             "OFF_6": request.form["OFF_6"],
             "OFF_7": request.form["OFF_7"],
         }
-        # if id == "" or id ==  "Select Entity":
         if entity_id == []:
             flash("Error please fill entity id")
             entity_id = []
@@ -190,7 +188,6 @@ def add():
             run_daemon()
             load_scheduled()
             flash("Saved")
-        # return redirect(request.url)
         element_global = setting
         return render_template(
             "edit.html",
@@ -390,6 +387,7 @@ def get_elements():
         "climate",
         "cover",
         "input_boolean",
+        "fan",
     ]
     URL = "http://hassio/homeassistant/api/states"
 
