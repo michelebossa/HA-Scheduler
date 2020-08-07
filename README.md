@@ -3,7 +3,7 @@ Scheduler Addon for Home Hassistant
 
 This addon handles a week of configuration for automation, light, binary_sensor, climate, cover, switch and script.
 
-![code style](https://img.shields.io/badge/Code%20style-Black-black)
+[![code style](https://img.shields.io/badge/Code%20style-Black-black)](https://black.now.sh/)
 
 
 ![main](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/main.png)
