@@ -319,6 +319,7 @@
 				document.getElementById('editForm').setAttribute('action', url);
 			}
 			function Home(id) {
+				parent.history.pushState({}, "", parent.window.origin + '/' + parent.window.location.pathname.substring(1, 32));
 				url = window.origin + '/' + window.location.pathname.substring(1, 64);
 				window.location.href = url;
 			}
