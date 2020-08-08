@@ -135,17 +135,14 @@
 				});
 			}
 			function Add() {
-				parent.history.pushState({}, "", parent.window.location.href + "/add");
 				let url = window.location.href + "add";
 				window.location.href = url;
 			}
 			function Log() {
-				parent.history.pushState({}, "", parent.window.location.href + "/log");
 				let url = window.location.href + "log";
 				window.location.href = url;
 			}
 			function Edit(id) {
-				parent.history.pushState({}, "", parent.window.location.href + "/item/" + id);
 				let url = window.location.href + "item/" + id;
 				window.location.href = url;
 			}
@@ -155,9 +152,9 @@
 			} else if (parent.window.location.href.includes("log")) {
 				parent.history.replaceState({}, "", parent.window.location.href.replace("/log", ""));
 				Log();
-			} else if (parent.window.location.href.includes("item")) {
-				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/item/") + 7);
-				parent.history.replaceState({}, "", parent.window.location.href.substring(0, parent.window.location.href.indexOf("/item"));
+			} else if (parent.window.location.href.includes("edit")) {
+				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/edit/") + 7);
+				parent.history.replaceState({}, "", parent.window.location.href.substring(0, parent.window.location.href.indexOf("/edit"));
 				Edit(id);
 			}
 		</script>
