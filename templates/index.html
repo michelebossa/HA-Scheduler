@@ -30,9 +30,6 @@
 	<body>
 		<div class="row">
 			<div class="col">
-				<button type="button" class="btn btn-light" onclick="Home()">
-					<span class="mdi mdi-home"></span>
-				</button>
 				<button type="button" class="btn btn-light" onclick="Reload()">
 					<span class="mdi mdi-reload"></span>
 				</button>
@@ -126,39 +123,40 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
 				integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script>
+			parent.history.pushState({}, "", parent.window.origin + '/' + parent.window.location.pathname.substring(1, 32))
 			function Reload() {
-			$.post({
-			url: "reload",
-			data: JSON.stringify("{}"),
-			success: function(data) {
-			location.reload();
-
-			},
-			dataType: "json",
-			contentType: 'application/json'
-			})
+				$.post({
+				url: "reload",
+				data: JSON.stringify("{}"),
+				success: function(data) {
+					location.reload();
+				},
+				dataType: "json",
+				contentType: 'application/json'
+				});
 			}
-
-			function Home() {
-			let url = window.location.href;
-			window.location.href = url;
-
-			}
-
 			function Add() {
-			let url = window.location.href + "add";
-			window.location.href = url;
-
+				let url = window.location.href + "add";
+				window.location.href = url;
 			}
 			function Log() {
-			let url = window.location.href + "log";
-			window.location.href = url;
-
+				let url = window.location.href + "log";
+				window.location.href = url;
 			}
 			function Edit(id) {
-			let url = window.location.href + "item/" + id;
-			window.location.href = url;
-
+				let url = window.location.href + "item/" + id;
+				window.location.href = url;
+			}
+			if (parent.window.location.href.includes("add")) {
+				parent.history.replaceState({}, "", parent.window.location.href.replace("/add", ""));
+				Add();
+			} else if (parent.window.location.href.includes("log")) {
+				parent.history.replaceState({}, "", parent.window.location.href.replace("/log", ""));
+				Log();
+			} else if (parent.window.location.href.includes("edit")) {
+				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/edit/") + 7);
+				parent.history.replaceState({}, "", parent.window.location.href.substring(0, parent.window.location.href.indexOf("/edit"));
+				Edit(id);
 			}
 		</script>
 	</body>
