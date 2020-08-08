@@ -65,11 +65,10 @@
 				</div>
 				<div class="table-responsive">
 					<table class="table table-sm">
-
 						<thead>
 							<tr>
 								<th scope="col">
-									<div class="custom-control custom-switch">
+									Currently <div class="custom-control custom-switch">
 										<input type="checkbox" class="custom-control-input" disabled
 											   id="enable" name="enable" {{'checked' if sched.enable == "true" else ""}}>
 										<label class="custom-control-label" for="enable"></label>
@@ -123,7 +122,6 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
 				integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script>
-			parent.history.pushState({}, "", parent.window.origin + '/' + parent.window.location.pathname.substring(1, 32))
 			function Reload() {
 				$.post({
 				url: "reload",
@@ -154,10 +152,11 @@
 				parent.history.replaceState({}, "", parent.window.location.href.replace("/log", ""));
 				Log();
 			} else if (parent.window.location.href.includes("edit")) {
-				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/edit/") + 7);
-				parent.history.replaceState({}, "", parent.window.location.href.substring(0, parent.window.location.href.indexOf("/edit"));
+				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/edit/") + 6);
+				parent.history.replaceState({}, "", parent.window.location.href.substring(0, parent.window.location.href.indexOf("/edit")));
 				Edit(id);
 			}
+			parent.history.pushState({}, "", parent.window.origin + '/' + parent.window.location.pathname.substring(1, 32));
 		</script>
 	</body>
 </html>

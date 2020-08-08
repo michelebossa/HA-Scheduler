@@ -44,6 +44,7 @@
 			}
 
 			function Home() {
+				parent.history.pushState({}, "", parent.window.origin + '/' + parent.window.location.pathname.substring(1, 33));
 				let url = window.location.href.replace("log", "");
 				window.location.href = url;
 			}
