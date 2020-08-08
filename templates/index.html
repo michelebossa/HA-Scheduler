@@ -153,7 +153,7 @@
 				parent.history.replaceState({}, "", parent.window.location.href.replace("/log", ""));
 				Log();
 			} else if (parent.window.location.href.includes("edit")) {
-				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/edit/") + 7);
+				let id = parent.window.location.href.substring(parent.window.location.href.indexOf("/edit/") + 6);
 				parent.history.replaceState({}, "", parent.window.location.href.substring(0, parent.window.location.href.indexOf("/edit")));
 				Edit(id);
 			}
