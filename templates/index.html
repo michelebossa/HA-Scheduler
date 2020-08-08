@@ -68,11 +68,7 @@
 						<thead>
 							<tr>
 								<th scope="col">
-									Currently <div class="custom-control custom-switch">
-										<input type="checkbox" class="custom-control-input" disabled
-											   id="enable" name="enable" {{'checked' if sched.enable == "true" else ""}}>
-										<label class="custom-control-label" for="enable"></label>
-									</div>
+									Currently {{"enabled" if sched.enable == "true" else "not enabled"}}
 								</th>
 								<th scope="col" {{ 'style=color:grey;' if sched.enable_1 == "false" else "" }}>Mon</th>
 								<th scope="col" {{ 'style=color:grey;' if sched.enable_2 == "false" else "" }}>Tue</th>
