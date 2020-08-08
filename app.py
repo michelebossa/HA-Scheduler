@@ -6,6 +6,7 @@ import psutil
 import logging
 import random
 import string
+import traceback
 
 app = Flask(__name__)
 scheduled = []
@@ -62,150 +63,146 @@ def index():
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
-    try:
-        global element_global
-        if request.method == "GET":
+    global element_global
+    if request.method == "GET":
+        entity_id = []
+        entity = {"entity_id": "", "domain": "", "friendly_name": ""}
+        entity_id.append(entity)
+        elem = {
+            "id": "",
+            "entity_id": entity_id,
+            "friendly_name": "",
+            "enable": "true",
+            "enable_1": "true",
+            "enable_2": "true",
+            "enable_3": "true",
+            "enable_4": "true",
+            "enable_5": "true",
+            "enable_6": "true",
+            "enable_7": "true",
+            "ON_1": "",
+            "ON_2": "",
+            "ON_3": "",
+            "ON_4": "",
+            "ON_5": "",
+            "ON_6": "",
+            "ON_7": "",
+            "OFF_1": "",
+            "OFF_2": "",
+            "OFF_3": "",
+            "OFF_4": "",
+            "OFF_5": "",
+            "OFF_6": "",
+            "OFF_7": "",
+        }
+        element_global = elem
+        return render_template(
+            "edit.html",
+            elem=elem,
+            elements=elements,
+            pid=pid,
+            sun=sun,
+            bk_color=bk_color,
+        )
+    else:
+        entity_id = []
+        i = 0
+        while True:
+            i += 1
+            name = "entity_id_" + str(i)
+            if name in request.form:
+                if (
+                    request.form[name] != "Select an entity"
+                    and request.form[name] != ""
+                ):
+                    data = request.form[name].split(".")
+                    domain = data[0]
+                    data = request.form[name].split("-")
+                    friendly_name = data[1]
+                    entity = {
+                        "entity_id": data[0],
+                        "domain": domain,
+                        "friendly_name": friendly_name,
+                    }
+                    entity_id.append(entity)
+                    print(entity)
+            else:
+                break
+        print(entity_id)
+
+        friendly_name = request.form["friendly_name"]
+        id = randomid(20)
+        enable = "false"
+        enable_1 = "false"
+        enable_2 = "false"
+        enable_3 = "false"
+        enable_4 = "false"
+        enable_5 = "false"
+        enable_6 = "false"
+        enable_7 = "false"
+        if "enable" in request.form:
+            enable = "true"
+        if "enable_1" in request.form:
+            enable_1 = "true"
+        if "enable_2" in request.form:
+            enable_2 = "true"
+        if "enable_3" in request.form:
+            enable_3 = "true"
+        if "enable_4" in request.form:
+            enable_4 = "true"
+        if "enable_5" in request.form:
+            enable_5 = "true"
+        if "enable_6" in request.form:
+            enable_6 = "true"
+        if "enable_7" in request.form:
+            enable_7 = "true"
+
+        setting = {
+            "id": id,
+            "entity_id": entity_id,
+            "friendly_name": friendly_name,
+            "enable": enable,
+            "enable_1": enable_1,
+            "enable_2": enable_2,
+            "enable_3": enable_3,
+            "enable_4": enable_4,
+            "enable_5": enable_5,
+            "enable_6": enable_6,
+            "enable_7": enable_7,
+            "ON_1": request.form["ON_1"],
+            "ON_2": request.form["ON_2"],
+            "ON_3": request.form["ON_3"],
+            "ON_4": request.form["ON_4"],
+            "ON_5": request.form["ON_5"],
+            "ON_6": request.form["ON_6"],
+            "ON_7": request.form["ON_7"],
+            "OFF_1": request.form["OFF_1"],
+            "OFF_2": request.form["OFF_2"],
+            "OFF_3": request.form["OFF_3"],
+            "OFF_4": request.form["OFF_4"],
+            "OFF_5": request.form["OFF_5"],
+            "OFF_6": request.form["OFF_6"],
+            "OFF_7": request.form["OFF_7"],
+        }
+        if entity_id == []:
+            flash("Error please fill entity id")
             entity_id = []
             entity = {"entity_id": "", "domain": "", "friendly_name": ""}
-            entity_id.append(entity)
-            elem = {
-                "id": "",
-                "entity_id": entity_id,
-                "friendly_name": "",
-                "enable": "true",
-                "enable_1": "true",
-                "enable_2": "true",
-                "enable_3": "true",
-                "enable_4": "true",
-                "enable_5": "true",
-                "enable_6": "true",
-                "enable_7": "true",
-                "ON_1": "",
-                "ON_2": "",
-                "ON_3": "",
-                "ON_4": "",
-                "ON_5": "",
-                "ON_6": "",
-                "ON_7": "",
-                "OFF_1": "",
-                "OFF_2": "",
-                "OFF_3": "",
-                "OFF_4": "",
-                "OFF_5": "",
-                "OFF_6": "",
-                "OFF_7": "",
-            }
-            element_global = elem
-            return render_template(
-                "edit.html",
-                elem=elem,
-                elements=elements,
-                pid=pid,
-                sun=sun,
-                bk_color=bk_color,
-            )
+            setting["entity_id"].append(entity)
         else:
-            entity_id = []
-            i = 0
-            while True:
-                i += 1
-                name = "entity_id_" + str(i)
-                if name in request.form:
-                    if (
-                        request.form[name] != "Select Entity"
-                        and request.form[name] != ""
-                    ):
-                        data = request.form[name].split(".")
-                        domain = data[0]
-                        data = request.form[name].split("-")
-                        friendly_name = data[1]
-                        entity = {
-                            "entity_id": data[0],
-                            "domain": domain,
-                            "friendly_name": friendly_name,
-                        }
-                        entity_id.append(entity)
-                        print(entity)
-                else:
-                    break
-            print(entity_id)
-
-            friendly_name = request.form["friendly_name"]
-            id = randomid(20)
-            enable = "false"
-            enable_1 = "false"
-            enable_2 = "false"
-            enable_3 = "false"
-            enable_4 = "false"
-            enable_5 = "false"
-            enable_6 = "false"
-            enable_7 = "false"
-            if "enable" in request.form:
-                enable = "true"
-            if "enable_1" in request.form:
-                enable_1 = "true"
-            if "enable_2" in request.form:
-                enable_2 = "true"
-            if "enable_3" in request.form:
-                enable_3 = "true"
-            if "enable_4" in request.form:
-                enable_4 = "true"
-            if "enable_5" in request.form:
-                enable_5 = "true"
-            if "enable_6" in request.form:
-                enable_6 = "true"
-            if "enable_7" in request.form:
-                enable_7 = "true"
-
-            setting = {
-                "id": id,
-                "entity_id": entity_id,
-                "friendly_name": friendly_name,
-                "enable": enable,
-                "enable_1": enable_1,
-                "enable_2": enable_2,
-                "enable_3": enable_3,
-                "enable_4": enable_4,
-                "enable_5": enable_5,
-                "enable_6": enable_6,
-                "enable_7": enable_7,
-                "ON_1": request.form["ON_1"],
-                "ON_2": request.form["ON_2"],
-                "ON_3": request.form["ON_3"],
-                "ON_4": request.form["ON_4"],
-                "ON_5": request.form["ON_5"],
-                "ON_6": request.form["ON_6"],
-                "ON_7": request.form["ON_7"],
-                "OFF_1": request.form["OFF_1"],
-                "OFF_2": request.form["OFF_2"],
-                "OFF_3": request.form["OFF_3"],
-                "OFF_4": request.form["OFF_4"],
-                "OFF_5": request.form["OFF_5"],
-                "OFF_6": request.form["OFF_6"],
-                "OFF_7": request.form["OFF_7"],
-            }
-            if entity_id == []:
-                flash("Error please fill entity id")
-                entity_id = []
-                entity = {"entity_id": "", "domain": "", "friendly_name": ""}
-                setting["entity_id"].append(entity)
-            else:
-                write_scheduled(setting)
-                run_daemon()
-                load_scheduled()
-                flash("Saved")
-            element_global = setting
-            return render_template(
-                "edit.html",
-                elem=setting,
-                elements=elements,
-                pid=pid,
-                sun=sun,
-                bk_color=bk_color,
-            )
-    except Exception as e:
-        logger.error(str(e))
-        return str(e)
+            write_scheduled(setting)
+            run_daemon()
+            load_scheduled()
+            flash("Saved")
+        element_global = setting
+        return render_template(
+            "edit.html",
+            elem=setting,
+            elements=elements,
+            pid=pid,
+            sun=sun,
+            bk_color=bk_color,
+        )
 
 
 @app.route("/item/add_elem", methods=["GET", "POST"])
@@ -475,6 +472,16 @@ def run_daemon():
 
     os.system("python3 /home/daemon.py &")
     print("Daemon Start")
+
+
+@app.errorhandler(Exception)
+def exception_handler(error):
+    return (
+        "We've ran into an error. It's a "
+        + repr(error)
+        + " error, and its trace is \n"
+        + "".join(traceback.format_tb(error.__traceback__))
+    )
 
 
 if __name__ == "__main__":
