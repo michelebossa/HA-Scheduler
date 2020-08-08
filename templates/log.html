@@ -31,7 +31,7 @@
 				</button>
 			</div>
 		</div>
-		<div id="log_container" style="background-color: gray; overflow:scroll; color: black; width: 100%;">
+		<div id="log_container" style="overflow: scroll; color: black; width: 100%;">
 			<pre id="logwindow" style="margin: 10px;">{{data}}</pre>
 		</div>
 		<script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
@@ -39,12 +39,13 @@
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 		<script>
 			function Reload() {    
-			           location.reload();
+				location.reload();
 			}
-			
+
 			function Home() {
-			    let url = window.location.href.replace("log", "");;
-			    window.location.href = url;
+				let url = window.location.href.replace("log", "");
+				window.location.href = url;
+				parent.history.pushState({}, "", parent.location.href.replace("log", ""));
 			}
 		</script>
 	</body>
