@@ -43,9 +43,9 @@
 			}
 
 			function Home() {
+				parent.history.pushState({}, "", parent.location.href.replace("/log", ""));
 				let url = window.location.href.replace("log", "");
 				window.location.href = url;
-				parent.history.pushState({}, "", parent.location.href.replace("log", ""));
 			}
 		</script>
 	</body>
