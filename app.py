@@ -204,8 +204,7 @@ def add():
                 bk_color=bk_color,
             )
     except Exception as e:
-        logger.error(str(e))
-        return str(e)
+        return e.__repr__()
 
 
 @app.route("/item/add_elem", methods=["GET", "POST"])
