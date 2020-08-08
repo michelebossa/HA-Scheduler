@@ -6,6 +6,7 @@ import psutil
 import logging
 import random
 import string
+import traceback
 
 app = Flask(__name__)
 scheduled = []
@@ -204,7 +205,7 @@ def add():
                 bk_color=bk_color,
             )
     except Exception as e:
-        return e.__repr__()
+        return ''.join(traceback.format_tb(e.__traceback__))
 
 
 @app.route("/item/add_elem", methods=["GET", "POST"])
