@@ -387,12 +387,10 @@ def get_elements():
     domains = [
         "automation",
         "light",
-        "binary_sensor",
         "switch",
         "script",
         "climate",
         "cover",
-        "input_boolean",
         "fan",
     ]
     URL = "http://hassio/homeassistant/api/states"
