@@ -1,7 +1,15 @@
-# HA-Scheduler
+# Home Assistant Scheduler
 Scheduler Addon for Home Hassistant
 
-This addon handles a week of configuration for automation, light, binary_sensor, climate, cover, switch and script.
+This addon handles a week of configuration for:
+- automation
+- binary_sensor
+- climate
+- cover
+- fan
+- light
+- script
+- switch
 
 [![code style](https://img.shields.io/badge/Code%20style-Black-black)](https://black.now.sh/)
 
