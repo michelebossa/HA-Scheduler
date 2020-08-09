@@ -6,6 +6,7 @@ This addon handles a week of configuration for:
 - climate
 - cover
 - fan
+- input_boolean
 - light
 - script
 - switch
