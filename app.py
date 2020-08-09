@@ -245,10 +245,12 @@ def delete(id):
         run_daemon()
         load_scheduled()
         flash("Deleted")
+    get_deamon_pid()
+    get_sun()
     return render_template(
-        "edit.html",
-        elem=element_global,
+        "index.html",
         elements=elements,
+        scheduled=scheduled,
         pid=pid,
         sun=sun,
         bk_color=bk_color,
