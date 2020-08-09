@@ -3,7 +3,6 @@ Scheduler Addon for Home Hassistant
 
 This addon handles a week of configuration for:
 - automation
-- binary_sensor
 - climate
 - cover
 - fan
