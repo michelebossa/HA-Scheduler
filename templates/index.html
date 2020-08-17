@@ -68,7 +68,7 @@
 						<thead>
 							<tr>
 								<th scope="col">
-									Currently {{"enabled" if sched.enable == "true" else "not enabled"}}
+									{{"On" if sched.enable == "true" else "Off"}}
 								</th>
 								<th scope="col" {{ 'style=color:grey;' if sched.enable_1 == "false" else "" }}>Mon</th>
 								<th scope="col" {{ 'style=color:grey;' if sched.enable_2 == "false" else "" }}>Tue</th>
