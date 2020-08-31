@@ -10,6 +10,7 @@ This addon handles a week of configuration for:
 - light
 - script
 - switch
+
 [![code style](https://img.shields.io/badge/Code%20style-Black-black)](https://black.now.sh/)
 
 ![main](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/main.png)
