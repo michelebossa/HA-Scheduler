@@ -1,15 +1,23 @@
 # HA-Scheduler
-Scheduler Addon Home Hassistant
+Scheduler Addon for Home Hassistant
 
-This addon give us the possibility to handle a simple week configuration of automation, light, binary_sensor, climate, cover, switch and script.
-
+This addon handles a week of configuration for:
+- automation
+- climate
+- cover
+- fan
+- input_boolean
+- light
+- script
+- switch
+[![code style](https://img.shields.io/badge/Code%20style-Black-black)](https://black.now.sh/)
 
 ![main](https://raw.githubusercontent.com/michelebossa/HA-Scheduler/master/main.png)
 
 
-Entity setting section:
+Edit section:
 
-We can made a group and set on or off action every day with follow format:
+We can make a group and set on or off action every day with following format:
 
 
 - No Fill									( No action on this day	)					
@@ -24,17 +32,17 @@ We can made a group and set on or off action every day with follow format:
 
 # Installation
 
-Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New repository URL" after install it.
+Copy the url of this addon into "Supervisor" -> "Addon Store" -> "Add New repository URL", and then close the dialog. Scroll down, choose "HA-Scheduler", and install it.
 
 # Configuration
 
-    log_level: Level of logging messages default info 
+    log_level: Level of logging messages default info
 	max_retries: Number of retrying action default 2
 	max_retry_interval: How many seconds to wait before retrying. default 5
-	bk_color: The background color default vaule #f8f9fa (white) 
+	bk_color: The background color default vaule #f8f9fa (white)
 
 ## Home Assistant service
-There is the possibility to enable or disable an entity by call these service on you automation/script:
+There is the possibility to enable or disable an entity by calling this service on your automation/script:
 
 ```yaml
 service: hassio.addon_stdin
@@ -43,7 +51,7 @@ data:
   input: light_group:enable_on
 ```
 
-	addon = name of addon 
+	addon = name of addon
 	input = group name:action (enable_on or enable_off)
 
 <a target="_blank" href="https://www.buymeacoffee.com/michelebossa" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/white_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
