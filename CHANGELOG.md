@@ -1,9 +1,13 @@
 # Changelog
+## 0.15
+
+- Add FAN (BETA)
+- Allign code
 
 ## 0.14
 
 - Add brightness set for light entity (BETA)
-- FIX sort group name 
+- FIX sort group name
 
 ## 0.13
 
@@ -20,7 +24,7 @@
 
 ## 0.10
 
-- Check at reboot if there is an entity to set on based the  scheduled time 
+- Check at reboot if there is an entity to set on based the  scheduled time
 - Add new option in config to set background color
 
 ## 0.9
