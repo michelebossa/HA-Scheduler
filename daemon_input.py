@@ -26,8 +26,12 @@ for file in list:
             reload = "true"
 if reload == "true":
     for process in psutil.process_iter():
-        if "/home/daemon.py" in process.cmdline():
-            print("Daemon Kill", process.pid)
+#        if "/home/daemon.py" in process.cmdline():
+#            print("Daemon Kill", process.pid)
+#            os.system("kill " + str(process.pid))
+#    os.system("python3 /home/daemon.py &")
+        if "/home/app.py" in process.cmdline():
+            print("App Kill", process.pid)
             os.system("kill " + str(process.pid))
-    os.system("python3 /home/daemon.py &")
-    print("Daemon Start")
+    os.system("python3 /home/app.py &")
+    print("App Start")
