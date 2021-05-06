@@ -1,4 +1,8 @@
 # Changelog
+## 0.16
+
+- FIX sun time format Version 2021.5.0
+
 ## 0.15
 
 - Add FAN (BETA)

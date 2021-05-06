@@ -61,9 +61,9 @@ def get_sun():
     global next_setting
     global next_rising
     global day_sun
-    next_setting = datetime.strptime(json_data["next_setting"], "%Y-%m-%dT%H:%M:%S%z")
+    next_setting = datetime.strptime(json_data["next_setting"], "%Y-%m-%dT%H:%M:%S.%f%z")
     next_setting = next_setting.replace(tzinfo=timezone.utc).astimezone(tz=None)
-    next_rising = datetime.strptime(json_data["next_rising"], "%Y-%m-%dT%H:%M:%S%z")
+    next_rising = datetime.strptime(json_data["next_rising"], "%Y-%m-%dT%H:%M:%S.%f%z")
     next_rising = next_rising.replace(tzinfo=timezone.utc).astimezone(tz=None)
     found = "false"
     if day_sun == "":
