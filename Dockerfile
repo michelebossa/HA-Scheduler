@@ -1,4 +1,4 @@
-ARG BUILD_FROM	
+ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
 # Copy data for add-on
@@ -12,7 +12,7 @@ RUN chmod a+x /home/run.sh
 
 # Install requirements for add-on
 RUN apk add --no-cache python3 python3-dev py-psutil nano
-RUN pip3 install Flask requests
+RUN pip3 install Flask requests python-dateutil
 
 # Python 3 HTTP Server serves the current working dir
 # So let's set it to our add-on persistent data directory.

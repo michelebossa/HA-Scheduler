@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime, timezone, timedelta
+from dateutil.parser import parse
 import time
 import json
 import os
@@ -61,9 +62,11 @@ def get_sun():
     global next_setting
     global next_rising
     global day_sun
-    next_setting = datetime.strptime(json_data["next_setting"], "%Y-%m-%dT%H:%M:%S.%f%z")
+#    next_setting = datetime.strptime(json_data["next_setting"], "%Y-%m-%dT%H:%M:%S.%f%z")
+    next_setting = parse(json_data["next_setting"])
     next_setting = next_setting.replace(tzinfo=timezone.utc).astimezone(tz=None)
-    next_rising = datetime.strptime(json_data["next_rising"], "%Y-%m-%dT%H:%M:%S.%f%z")
+#    next_rising = datetime.strptime(json_data["next_rising"], "%Y-%m-%dT%H:%M:%S.%f%z")
+    next_rising = parse(json_data["next_rising"])
     next_rising = next_rising.replace(tzinfo=timezone.utc).astimezone(tz=None)
     found = "false"
     if day_sun == "":
