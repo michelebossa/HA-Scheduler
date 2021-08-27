@@ -50,7 +50,7 @@ def load_scheduled():
 
 
 def get_sun():
-    URL = "http://hassio/homeassistant/api/states/sun.sun"
+    URL = "http://supervisor/core/api/states/sun.sun"
 
     # defining a params dict for the parameters to be sent to the API
     Auth = "Bearer " + SUPERVISOR_TOKEN
@@ -100,7 +100,7 @@ def get_sun():
 
 
 def set_temp(elem):
-    URL = "http://hassio/homeassistant/api/services/climate/set_temperature"
+    URL = "http://supervisor/core/api/services/climate/set_temperature"
 
     # defining a params dict for the parameters to be sent to the API
     Auth = "Bearer " + SUPERVISOR_TOKEN
@@ -126,7 +126,7 @@ def call_service(**elem):
             service = "/close_cover"
     else:
         service = "/turn_" + elem["action"]
-    URL = "http://hassio/homeassistant/api/services/" + elem["dominio"] + service
+    URL = "http://supervisor/core/api/services/" + elem["dominio"] + service
     # URL = "http://hassio/homeassistant/api/services/" + elem["dominio"] + "/turn_" + elem["action"]
 
     # defining a params dict for the parameters to be sent to the API
@@ -289,7 +289,7 @@ def check_HA(**elem):
         mes = "Start Check HA" + elem["id"] + " RET INDEX" + str(times)
         logging.info(mes)
         time.sleep(max_retry_interval)
-        URL = "http://hassio/homeassistant/api/states/" + elem["id"]
+        URL = "http://supervisor/core/api/states/" + elem["id"]
 
         # defining a params dict for the parameters to be sent to the API
         Auth = "Bearer " + SUPERVISOR_TOKEN

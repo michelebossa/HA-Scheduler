@@ -1,4 +1,8 @@
 # Changelog
+## 0.17
+
+- FIX new API endpoint
+
 ## 0.16
 
 - FIX sun time format Version 2021.5.0

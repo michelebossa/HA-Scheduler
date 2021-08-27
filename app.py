@@ -403,7 +403,7 @@ def get_elements():
         "script",
         "switch",
     ]
-    URL = "http://hassio/homeassistant/api/states"
+    URL = "http://supervisor/core/api/states"
 
     # defining a params dict for the parameters to be sent to the API
     Auth = "Bearer " + SUPERVISOR_TOKEN
@@ -471,7 +471,7 @@ def load_scheduled():
 
 
 def call_service(dominio, id, action):
-    URL = "http://hassio/homeassistant/api/services/" + dominio + "/turn_" + action
+    URL = "http://supervisor/core/api/services/" + dominio + "/turn_" + action
 
     # defining a params dict for the parameters to be sent to the API
     Auth = "Bearer " + SUPERVISOR_TOKEN
